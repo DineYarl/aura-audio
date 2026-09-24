@@ -1,212 +1,459 @@
 /* ===================================================================
- * Modern Translucent Glass & Minimalist Audio Player Design System
+ * Aura Audio – Melosik-Inspired Design
+ * Clean dark UI, bold typography, accent highlights, no glass/blur
  * =================================================================== */
 
-/* --- Central Application Window & Base Layout --- */
-QMainWindow, QWidget#centralWidget {
-  background-color: #121319;
-  color: #f0f2f8;
+/* ── Base ─────────────────────────────────────────────────────────── */
+QMainWindow,
+QWidget#centralWidget {
+  background-color: #13131F;
+  color: #E8EAF6;
 }
 
-/* --- Clean Modern Sidebar --- */
+/* ── Top Header Navigation Bar ────────────────────────────────────── */
+QWidget#top_header_bar {
+  background-color: #0F0F1A;
+  border-bottom: 1px solid #1C1C2E;
+  min-height: 54px;
+  max-height: 54px;
+}
+
+QLabel#header_logo {
+  color: #FFFFFF;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 3px;
+  padding-left: 4px;
+}
+
+/* Nav pills — flat underline style like Melosik */
+QWidget#header_nav_container QPushButton {
+  background: transparent;
+  color: #5C5F7A;
+  border: none;
+  border-bottom: 2px solid transparent;
+  border-radius: 0px;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 14px 6px 14px;
+  margin: 0 2px;
+}
+
+QWidget#header_nav_container QPushButton:hover {
+  color: #A0A3BF;
+  background: transparent;
+}
+
+QWidget#header_nav_container QPushButton:checked {
+  color: #FFFFFF;
+  border-bottom: 2px solid #7C6FCD;
+  background: transparent;
+}
+
+/* Search capsule */
+QLineEdit#header_search {
+  background-color: #1A1A2E;
+  border: 1px solid #2A2A42;
+  border-radius: 18px;
+  color: #C0C4E0;
+  font-size: 12px;
+  padding: 5px 14px;
+  min-width: 180px;
+}
+
+QLineEdit#header_search:focus {
+  border: 1px solid #7C6FCD;
+  background-color: #1D1D34;
+}
+
+/* Settings / menu icon buttons */
+QToolButton#header_settings,
+QToolButton#header_menu {
+  background: transparent;
+  border: none;
+  border-radius: 10px;
+  padding: 6px;
+  color: #5C5F7A;
+}
+
+QToolButton#header_settings:hover,
+QToolButton#header_menu:hover {
+  background-color: #1A1A2E;
+  color: #FFFFFF;
+}
+
+/* ── Sub-Header Bar (ALBUMS · 369 / SHUFFLE ALL / SONGS · 657) ───── */
+QWidget#sub_header_bar {
+  background-color: #0F0F1A;
+  border-bottom: 1px solid #1C1C2E;
+  min-height: 44px;
+  max-height: 44px;
+}
+
+QLabel#lbl_collection_count,
+QLabel#lbl_songs_count {
+  color: #4E5070;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+QToolButton#btn_shuffle_all {
+  background-color: #1E1E30;
+  border: 1px solid #2A2A42;
+  border-radius: 14px;
+  color: #A0A3BF;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  padding: 4px 14px;
+}
+
+QToolButton#btn_shuffle_all:hover {
+  background-color: #26263A;
+  border: 1px solid #7C6FCD;
+  color: #FFFFFF;
+}
+
+QToolButton#btn_shuffle_all:pressed {
+  background-color: #7C6FCD;
+  color: #FFFFFF;
+}
+
+/* Sub-header divider line */
+QFrame#sub_header_divider {
+  background-color: #1C1C2E;
+  border: none;
+  max-width: 1px;
+  min-width: 1px;
+  margin: 8px 0;
+}
+
+/* ── Content Area (Collection + Playlist Splitter) ────────────────── */
+QSplitter#splitter {
+  background-color: #13131F;
+}
+
+QSplitter#splitter::handle {
+  background-color: #1C1C2E;
+  width: 1px;
+}
+
+/* Left panel – Collection / Album Grid */
 QWidget#sidebar_layout {
-  background-color: transparent;
-  border-right: 1px solid rgba(255, 255, 255, 0.07);
+  background-color: #13131F;
+  border: none;
 }
 
-/* --- Playlist View Area --- */
-#playlist {
-  background-color: #161722;
-  alternate-background-color: #1a1b27;
+/* Right panel – Songs list */
+QWidget#playlist_layout {
+  background-color: #10101C;
+  border-left: 1px solid #1C1C2E;
+}
+
+/* ── FancyTabWidget (content container) ───────────────────────────── */
+QTabWidget#tabs,
+QWidget#tabs {
+  background-color: #13131F;
+  border: none;
+}
+
+QTabWidget::pane {
+  border: none;
+  background: transparent;
+}
+
+QTabBar::tab {
+  background: transparent;
+  color: transparent;
+  height: 0px;
+  width: 0px;
+  padding: 0px;
+  border: none;
+}
+
+/* ── Collection / Library Tree View ──────────────────────────────── */
+CollectionView,
+QTreeView#view {
+  background-color: #13131F;
+  alternate-background-color: #13131F;
   border: none;
   font-size: 13px;
-  selection-background-color: rgba(67, 100, 247, 0.35);
-  selection-color: #ffffff;
+  show-decoration-selected: 1;
+  outline: none;
 }
 
-#playlist QHeaderView::section {
-  background-color: #13141d;
-  color: #8e92a4;
-  font-weight: 600;
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+CollectionView::item,
+QTreeView#view::item {
+  padding: 8px 12px;
+  border-radius: 0px;
+  margin: 0px;
+  border-bottom: 1px solid transparent;
+}
+
+CollectionView::item:hover,
+QTreeView#view::item:hover {
+  background-color: #1A1A2E;
+}
+
+CollectionView::item:selected,
+QTreeView#view::item:selected {
+  background-color: #1E1E34;
+  color: #FFFFFF;
+  border-left: 3px solid #7C6FCD;
+}
+
+/* Branch expand/collapse arrows */
+QTreeView::branch {
+  background: #13131F;
+}
+
+QTreeView::branch:has-children:!has-siblings:closed,
+QTreeView::branch:closed:has-children:has-siblings {
+  image: url(:/icons/22x22/actions/go-next.png);
+}
+
+QTreeView::branch:open:has-children:!has-siblings,
+QTreeView::branch:open:has-children:has-siblings {
+  image: url(:/icons/22x22/actions/go-down.png);
+}
+
+/* Collection filter widget */
+CollectionFilterWidget {
+  background-color: #0F0F1A;
+  border-bottom: 1px solid #1C1C2E;
+  padding: 4px 8px;
+}
+
+CollectionFilterWidget QLineEdit {
+  background-color: #1A1A2E;
+  border: 1px solid #2A2A42;
+  border-radius: 14px;
+  padding: 4px 12px;
+  color: #C0C4E0;
+  font-size: 12px;
+}
+
+CollectionFilterWidget QToolButton {
+  background: transparent;
   border: none;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  padding: 6px 8px;
+  color: #5C5F7A;
+}
+
+CollectionFilterWidget QToolButton:hover {
+  color: #A0A3BF;
+}
+
+/* ── Playlist View (right panel – Songs list) ─────────────────────── */
+#playlist {
+  background-color: #10101C;
+  alternate-background-color: #10101C;
+  border: none;
+  font-size: 13px;
+  selection-background-color: #1E1E34;
+  selection-color: #FFFFFF;
+  outline: none;
+}
+
+/* Songs list header */
+#playlist QHeaderView::section {
+  background-color: #0D0D18;
+  color: #3A3D58;
+  font-weight: 700;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border: none;
+  border-bottom: 1px solid #1C1C2E;
+  padding: 7px 12px;
 }
 
 #playlist::item {
-  padding: 5px 6px;
-  border-radius: 6px;
-  margin: 1px 4px;
+  padding: 10px 12px;
+  border: none;
+  border-bottom: 1px solid #13131F;
+  border-radius: 0px;
+  margin: 0px;
 }
 
 #playlist::item:hover {
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: #181828;
 }
 
 #playlist::item:selected {
-  background-color: rgba(67, 100, 247, 0.40);
-  color: #ffffff;
+  background-color: #1E1E34;
+  color: #FFFFFF;
+  border-left: 3px solid #7C6FCD;
 }
 
-/* --- Bottom Player Track Info --- */
+/* Playlist toolbar */
+#toolbar {
+  background-color: #0D0D18;
+  border: none;
+  border-bottom: 1px solid #1C1C2E;
+  padding: 3px 8px;
+}
+
+#toolbar QToolButton {
+  border: none;
+  border-radius: 6px;
+  padding: 3px;
+  background: transparent;
+  color: #5C5F7A;
+}
+
+#toolbar QToolButton:hover {
+  background-color: #1A1A2E;
+  color: #A0A3BF;
+}
+
+/* ── Bottom Player Bar ────────────────────────────────────────────── */
+QWidget#player_controls_container {
+  background-color: #0A0A15;
+  border-top: 1px solid #1C1C2E;
+  min-height: 76px;
+  max-height: 76px;
+}
+
+QFrame#player_controls {
+  background-color: #0A0A15;
+  border: none;
+  padding: 0px 20px;
+}
+
+/* Album art thumbnail */
+QLabel#now_playing_cover {
+  border-radius: 10px;
+  background-color: #1A1A2E;
+  border: none;
+  min-width: 52px;
+  max-width: 52px;
+  min-height: 52px;
+  max-height: 52px;
+}
+
+/* Track info */
 QLabel#now_playing_title {
   color: #FFFFFF;
   font-weight: 700;
   font-size: 13px;
-  letter-spacing: 0.2px;
 }
 
 QLabel#now_playing_artist {
-  color: #8E92A4;
-  font-weight: 500;
+  color: #5C5F7A;
+  font-weight: 400;
   font-size: 11px;
 }
 
-/* --- Floating Glass Playback Deck --- */
-QWidget#player_controls_container {
-  background: transparent;
-  margin: 0px;
-  padding: 6px 14px 10px 14px;
-}
-
-QFrame#player_controls {
-  background-color: rgba(23, 25, 35, 0.92);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 16px;
-  padding: 6px 16px;
-  margin-bottom: 2px;
-}
-
-/* Hide legacy dividers and harsh lines */
-QFrame#line_buttons, 
-QFrame#line_volume, 
-QFrame#line_5, 
-QFrame#line_2, 
-QFrame#line_love, 
-QFrame#line_6, 
-QFrame#status_bar_line {
-  border: none;
-  max-width: 0px;
-  max-height: 0px;
-  width: 0px;
-  height: 0px;
-  margin: 0px;
-  padding: 0px;
-}
-
-/* --- Modern Transport Buttons --- */
-QToolButton[accessibleName="MenuPopupToolButton"] {
-  border: 1px solid transparent;
-  border-radius: 10px;
-  padding: 4px;
-  background-color: transparent;
-}
-
-QToolButton:hover[accessibleName="MenuPopupToolButton"] {
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background-color: rgba(255, 255, 255, 0.08);
-}
-
-QToolButton:pressed[accessibleName="MenuPopupToolButton"] {
-  background-color: rgba(255, 255, 255, 0.15);
-  border: 1px solid rgba(255, 255, 255, 0.20);
-}
-
-/* Transport Action Buttons */
+/* ── Transport Buttons ────────────────────────────────────────────── */
 QToolButton#back_button,
 QToolButton#forward_button,
 QToolButton#stop_button {
-  background-color: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.09);
+  background: transparent;
+  border: none;
   border-radius: 16px;
   padding: 4px;
-  min-width: 32px;
-  max-width: 32px;
-  min-height: 32px;
-  max-height: 32px;
+  min-width: 34px;
+  max-width: 34px;
+  min-height: 34px;
+  max-height: 34px;
+  color: #7880A0;
 }
 
 QToolButton#back_button:hover,
 QToolButton#forward_button:hover,
 QToolButton#stop_button:hover {
-  background-color: rgba(255, 255, 255, 0.12);
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  background-color: #1A1A2E;
+  color: #FFFFFF;
 }
 
 QToolButton#back_button:pressed,
 QToolButton#forward_button:pressed,
 QToolButton#stop_button:pressed {
-  background-color: rgba(255, 255, 255, 0.18);
+  background-color: #222238;
 }
 
-/* Accent Play / Pause Button */
+/* Play / Pause — round accent circle */
 QToolButton#pause_play_button {
-  background: qlineargradient(x1:0, y1:0, x2:1, y2:1, stop:0 #3D68FF, stop:1 #5B86FF);
-  border-radius: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.35);
+  background-color: #7C6FCD;
+  border-radius: 22px;
+  border: none;
   padding: 4px;
-  min-width: 40px;
-  max-width: 40px;
-  min-height: 40px;
-  max-height: 40px;
+  min-width: 44px;
+  max-width: 44px;
+  min-height: 44px;
+  max-height: 44px;
+  color: #FFFFFF;
 }
 
 QToolButton#pause_play_button:hover {
-  background: qlineargradient(x1:0, y1:0, x2:1, y2:1, stop:0 #4E77FF, stop:1 #6D95FF);
-  border: 1px solid rgba(255, 255, 255, 0.55);
+  background-color: #8E82D8;
 }
 
 QToolButton#pause_play_button:pressed {
-  background: qlineargradient(x1:0, y1:0, x2:1, y2:1, stop:0 #3158DF, stop:1 #4872DF);
+  background-color: #6558B8;
 }
 
-/* --- Slim Modern Scrubber (TrackSlider) --- */
+/* Generic transparent icon buttons */
+QToolButton[accessibleName="MenuPopupToolButton"] {
+  border: none;
+  border-radius: 10px;
+  padding: 4px;
+  background: transparent;
+  color: #5C5F7A;
+}
+
+QToolButton:hover[accessibleName="MenuPopupToolButton"] {
+  background-color: #1A1A2E;
+  color: #A0A3BF;
+}
+
+QToolButton:pressed[accessibleName="MenuPopupToolButton"] {
+  background-color: #222238;
+}
+
+/* ── Track Scrubber ──────────────────────────────────────────────── */
 TrackSliderSlider::groove:horizontal {
-  height: 4px;
-  background: rgba(255, 255, 255, 0.14);
+  height: 3px;
+  background: #1E1E34;
   border-radius: 2px;
 }
 
 TrackSliderSlider::sub-page:horizontal {
-  background: %palette-highlight;
+  background: #7C6FCD;
   border-radius: 2px;
 }
 
 TrackSliderSlider::handle:horizontal {
-  background: #ffffff;
-  border: 1px solid rgba(0, 0, 0, 0.25);
+  background: #FFFFFF;
+  border: none;
   width: 12px;
   height: 12px;
-  margin: -4px 0;
+  margin: -5px 0;
   border-radius: 6px;
 }
 
 TrackSliderSlider::handle:horizontal:hover {
-  background: #ffffff;
-  border: 1px solid %palette-highlight;
+  background: #E8E4FF;
   width: 14px;
   height: 14px;
-  margin: -5px 0;
+  margin: -6px 0;
   border-radius: 7px;
 }
 
-/* Time display labels */
+/* Time labels */
 TrackSlider QLabel#elapsed,
 TrackSlider ClickableLabel#remaining {
   font-size: 11px;
-  font-weight: 600;
-  color: %palette-text;
-  opacity: 0.75;
+  font-weight: 500;
+  color: #4E5070;
   padding: 0 6px;
 }
 
-/* --- Volume Slider --- */
+/* ── Volume Slider ────────────────────────────────────────────────── */
 VolumeSlider::groove:horizontal {
-  height: 4px;
-  background: rgba(255, 255, 255, 0.14);
+  height: 3px;
+  background: #1E1E34;
   border-radius: 2px;
 }
 
@@ -216,36 +463,61 @@ VolumeSlider::sub-page:horizontal {
 }
 
 VolumeSlider::handle:horizontal {
-  background: #ffffff;
-  border: 1px solid rgba(0, 0, 0, 0.20);
+  background: #FFFFFF;
+  border: none;
   width: 10px;
   height: 10px;
-  margin: -3px 0;
+  margin: -4px 0;
   border-radius: 5px;
 }
 
 VolumeSlider::handle:horizontal:hover {
   width: 12px;
   height: 12px;
-  margin: -4px 0;
+  margin: -5px 0;
   border-radius: 6px;
 }
 
-/* --- Minimalist Modern Scrollbars --- */
+/* ── Audio Quality Badge ──────────────────────────────────────────── */
+QLabel#audio_quality_badge {
+  background-color: #1A1A2E;
+  color: #4E5070;
+  border: 1px solid #2A2A42;
+  border-radius: 6px;
+  padding: 3px 8px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  margin: 0px 4px;
+}
+
+QLabel#audio_quality_badge[quality="lossless"] {
+  background-color: #1A1A34;
+  color: #8080FF;
+  border: 1px solid #3A3A80;
+}
+
+QLabel#audio_quality_badge[quality="hires"] {
+  background-color: #2A2000;
+  color: #FFC425;
+  border: 1px solid #806010;
+}
+
+/* ── Scrollbars ──────────────────────────────────────────────────── */
 QScrollBar:vertical {
   background: transparent;
-  width: 6px;
+  width: 5px;
   margin: 0px;
 }
 
 QScrollBar::handle:vertical {
-  background: rgba(255, 255, 255, 0.18);
-  min-height: 24px;
+  background: #252538;
+  min-height: 28px;
   border-radius: 3px;
 }
 
 QScrollBar::handle:vertical:hover {
-  background: rgba(255, 255, 255, 0.35);
+  background: #36365A;
 }
 
 QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical,
@@ -256,18 +528,18 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
 
 QScrollBar:horizontal {
   background: transparent;
-  height: 6px;
+  height: 5px;
   margin: 0px;
 }
 
 QScrollBar::handle:horizontal {
-  background: rgba(255, 255, 255, 0.18);
-  min-width: 24px;
+  background: #252538;
+  min-width: 28px;
   border-radius: 3px;
 }
 
 QScrollBar::handle:horizontal:hover {
-  background: rgba(255, 255, 255, 0.35);
+  background: #36365A;
 }
 
 QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal,
@@ -276,10 +548,36 @@ QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {
   width: 0px;
 }
 
-/* --- Modern Search & Line Edit Capsule --- */
+/* ── Menus ───────────────────────────────────────────────────────── */
+QMenu {
+  background-color: #14142A;
+  border: 1px solid #2A2A42;
+  border-radius: 10px;
+  padding: 5px;
+}
+
+QMenu::item {
+  padding: 7px 20px;
+  border-radius: 6px;
+  color: #C0C4E0;
+  font-size: 12px;
+}
+
+QMenu::item:selected {
+  background-color: #7C6FCD;
+  color: #FFFFFF;
+}
+
+QMenu::separator {
+  height: 1px;
+  background: #1E1E34;
+  margin: 4px 10px;
+}
+
+/* ── Line Edits (general) ────────────────────────────────────────── */
 QLineEdit {
-  background-color: rgba(0, 0, 0, 0.25);
-  border: 1px solid rgba(255, 255, 255, 0.10);
+  background-color: #1A1A2E;
+  border: 1px solid #2A2A42;
   border-radius: 12px;
   padding: 5px 12px;
   color: %palette-text;
@@ -287,36 +585,48 @@ QLineEdit {
 }
 
 QLineEdit:focus {
-  border: 1px solid %palette-highlight;
-  background-color: rgba(0, 0, 0, 0.35);
+  border: 1px solid #7C6FCD;
+  background-color: #1D1D34;
 }
 
-/* --- Floating Menus & Popups --- */
-QMenu {
-  background-color: rgba(30, 34, 44, 0.94);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 10px;
-  padding: 5px;
+/* ── Hide legacy dividers ────────────────────────────────────────── */
+QFrame#line_buttons,
+QFrame#line_volume,
+QFrame#line_5,
+QFrame#line_2,
+QFrame#line_love,
+QFrame#line_6,
+QFrame#status_bar_line {
+  border: none;
+  max-width: 0px;
+  max-height: 0px;
+  width: 0px;
+  height: 0px;
+  margin: 0px;
+  padding: 0px;
 }
 
-QMenu::item {
-  padding: 6px 20px;
-  border-radius: 6px;
+/* ── Status Bar (hidden) ─────────────────────────────────────────── */
+QWidget#status_bar {
+  background: transparent;
+  font-size: 11px;
+  max-height: 0px;
+}
+
+/* ── Lyrics ──────────────────────────────────────────────────────── */
+ResizableTextEdit,
+QTextEdit#textedit_play_lyrics {
+  background-color: transparent;
+  border: none;
+  font-size: 15px;
+  font-weight: 500;
   color: %palette-text;
+  padding: 16px 24px;
+  selection-background-color: #7C6FCD;
+  selection-color: %palette-highlightedtext;
 }
 
-QMenu::item:selected {
-  background-color: %palette-highlight;
-  color: %palette-highlightedtext;
-}
-
-QMenu::separator {
-  height: 1px;
-  background: rgba(255, 255, 255, 0.08);
-  margin: 4px 8px;
-}
-
-/* --- Context & Details Area --- */
+/* ── Context Views ───────────────────────────────────────────────── */
 #context-layout-container,
 #context-widget-scrollarea,
 #context-layout-scrollarea,
@@ -325,94 +635,118 @@ QMenu::separator {
   border: none;
 }
 
-/* --- Status Bar & Track Summary --- */
-QWidget#status_bar {
-  background: transparent;
-  font-size: 11px;
-}
-
-QLabel#playlist_summary {
-  color: %palette-text;
-  opacity: 0.70;
-  font-size: 11px;
-  padding-right: 8px;
-}
-
-/* --- Audiophile Hi-Res Quality Badge --- */
-QLabel#audio_quality_badge {
-  background-color: rgba(255, 255, 255, 0.08);
-  color: %palette-text;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 8px;
-  padding: 4px 10px;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.8px;
-  margin: 0px 6px;
-}
-
-QLabel#audio_quality_badge[quality="lossless"] {
-  background-color: rgba(60, 150, 255, 0.18);
-  color: #72c0ff;
-  border: 1px solid rgba(60, 150, 255, 0.45);
-}
-
-QLabel#audio_quality_badge[quality="hires"] {
-  background-color: rgba(255, 185, 0, 0.20);
-  color: #ffc425;
-  border: 1px solid rgba(255, 185, 0, 0.55);
-}
-
-/* --- Collection View & Library Browser --- */
-CollectionView, QTreeView#view {
-  background-color: %palette-base;
-  border: none;
-  font-size: 13px;
-  show-decoration-selected: 1;
-}
-
-CollectionView::item, QTreeView#view::item {
-  padding: 6px 6px;
+/* ── Tooltip ─────────────────────────────────────────────────────── */
+QToolTip {
+  background-color: #14142A;
+  color: #C0C4E0;
+  border: 1px solid #2A2A42;
   border-radius: 6px;
-  margin: 1px 4px;
-}
-
-CollectionView::item:hover, QTreeView#view::item:hover {
-  background-color: rgba(255, 255, 255, 0.06);
-}
-
-CollectionView::item:selected, QTreeView#view::item:selected {
-  background-color: %palette-highlight;
-  color: %palette-highlightedtext;
-}
-
-CollectionFilterWidget {
-  background-color: transparent;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-  padding: 4px;
-}
-
-/* --- Minimalist Synchronized & Clean Lyrics View --- */
-ResizableTextEdit,
-QTextEdit#textedit_play_lyrics {
-  background-color: transparent;
-  border: none;
-  font-size: 15px;
-  font-weight: 500;
-  line-height: 1.8;
-  color: %palette-text;
-  padding: 16px 24px;
-  selection-background-color: %palette-highlight;
-  selection-color: %palette-highlightedtext;
-}
-
-/* --- Sleek Modern Menu Bar --- */
-QMenuBar {
-  background-color: #111218;
-  color: #B0B4C8;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-  padding: 2px 8px;
+  padding: 4px 10px;
   font-size: 12px;
+}
+
+/* ── Push Buttons (general) ─────────────────────────────────────── */
+QPushButton {
+  background-color: #1A1A2E;
+  border: 1px solid #2A2A42;
+  border-radius: 8px;
+  color: #C0C4E0;
+  padding: 5px 14px;
+  font-size: 12px;
+}
+
+QPushButton:hover {
+  background-color: #222238;
+  border: 1px solid #7C6FCD;
+  color: #FFFFFF;
+}
+
+QPushButton:pressed {
+  background-color: #7C6FCD;
+  color: #FFFFFF;
+}
+
+/* ── Combo Boxes ─────────────────────────────────────────────────── */
+QComboBox {
+  background-color: #1A1A2E;
+  border: 1px solid #2A2A42;
+  border-radius: 8px;
+  color: #C0C4E0;
+  padding: 4px 10px;
+  font-size: 12px;
+}
+
+QComboBox:hover {
+  border: 1px solid #7C6FCD;
+}
+
+QComboBox::drop-down {
+  border: none;
+}
+
+QComboBox QAbstractItemView {
+  background-color: #14142A;
+  border: 1px solid #2A2A42;
+  selection-background-color: #7C6FCD;
+  color: #C0C4E0;
+}
+
+/* ── Dialogs ─────────────────────────────────────────────────────── */
+QDialog {
+  background-color: #13131F;
+  color: #C0C4E0;
+}
+
+/* ── Group Boxes ─────────────────────────────────────────────────── */
+QGroupBox {
+  border: 1px solid #1C1C2E;
+  border-radius: 10px;
+  margin-top: 20px;
+  padding: 12px 8px 8px 8px;
+  color: #4E5070;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+QGroupBox::title {
+  subcontrol-origin: margin;
+  subcontrol-position: top left;
+  left: 12px;
+  padding: 0 4px;
+  color: #5C5F7A;
+}
+
+/* ── Checkboxes ──────────────────────────────────────────────────── */
+QCheckBox {
+  color: #C0C4E0;
+  spacing: 6px;
+  font-size: 12px;
+}
+
+QCheckBox::indicator {
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  border: 1px solid #2A2A42;
+  background-color: #1A1A2E;
+}
+
+QCheckBox::indicator:checked {
+  background-color: #7C6FCD;
+  border: 1px solid #7C6FCD;
+}
+
+/* ── Splitter Handle ─────────────────────────────────────────────── */
+QSplitter::handle {
+  background-color: #1C1C2E;
+}
+
+/* ── Menu Bar (hidden but keep style if ever shown) ──────────────── */
+QMenuBar {
+  background-color: #0F0F1A;
+  color: #5C5F7A;
+  border-bottom: 1px solid #1C1C2E;
 }
 
 QMenuBar::item {
@@ -422,27 +756,6 @@ QMenuBar::item {
 }
 
 QMenuBar::item:selected {
-  background-color: rgba(255, 255, 255, 0.08);
+  background-color: #1A1A2E;
   color: #FFFFFF;
 }
-
-/* --- Modern Playlist Toolbar --- */
-#toolbar {
-  background-color: #13141D;
-  border: none;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-  padding: 4px 8px;
-}
-
-#toolbar QToolButton {
-  border: none;
-  border-radius: 8px;
-  padding: 4px;
-  background: transparent;
-}
-
-#toolbar QToolButton:hover {
-  background-color: rgba(255, 255, 255, 0.08);
-}
-
-

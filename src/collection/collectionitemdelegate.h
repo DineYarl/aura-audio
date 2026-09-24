@@ -39,6 +39,7 @@ class CollectionItemDelegate : public QStyledItemDelegate {
  public:
   explicit CollectionItemDelegate(QObject *parent);
   void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &idx) const override;
+  QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &idx) const override;
 
  public Q_SLOTS:
   bool helpEvent(QHelpEvent *event, QAbstractItemView *view, const QStyleOptionViewItem &option, const QModelIndex &idx) override;

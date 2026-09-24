@@ -83,7 +83,7 @@ constexpr int kQueueOpacitySteps = 10;
 constexpr float kQueueOpacityLowerBound = 0.4F;
 }  // namespace
 
-const int PlaylistDelegateBase::kMinHeight = 19;
+const int PlaylistDelegateBase::kMinHeight = 36;
 
 QueuedItemDelegate::QueuedItemDelegate(QObject *parent, const int indicator_column)
     : QStyledItemDelegate(parent),

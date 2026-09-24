@@ -49,6 +49,14 @@
 
 CollectionItemDelegate::CollectionItemDelegate(QObject *parent) : QStyledItemDelegate(parent) {}
 
+QSize CollectionItemDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &idx) const {
+  QSize s = QStyledItemDelegate::sizeHint(option, idx);
+  if (s.height() < 34) {
+    s.setHeight(34);
+  }
+  return s;
+}
+
 void CollectionItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt, const QModelIndex &idx) const {
 
   const bool is_divider = idx.data(CollectionModel::Role_IsDivider).toBool();

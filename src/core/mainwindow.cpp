@@ -71,6 +71,11 @@
 #include <QStackedWidget>
 #include <QTabBar>
 #include <QToolButton>
+#include <QPushButton>
+#include <QLineEdit>
+#include <QButtonGroup>
+#include <QPainter>
+#include <QPainterPath>
 #include <QCheckBox>
 #include <QClipboard>
 #include <QShowEvent>
@@ -741,6 +746,91 @@ MainWindow::MainWindow(Application *app,
   QObject::connect(ui_->track_slider, &TrackSlider::Previous, &*app_->player(), &Player::Previous);
   QObject::connect(ui_->track_slider, &TrackSlider::Next, &*app_->player(), &Player::Next);
 
+  // Melosik Top Navigation Bar connects
+  QButtonGroup *nav_group = new QButtonGroup(this);
+  nav_group->addButton(ui_->nav_home, 0);
+  nav_group->addButton(ui_->nav_songs, 1);
+  nav_group->addButton(ui_->nav_artists, 2);
+  nav_group->addButton(ui_->nav_albums, 3);
+  nav_group->addButton(ui_->nav_playlists, 4);
+  nav_group->setExclusive(true);
+
+  QObject::connect(ui_->nav_home, &QPushButton::clicked, this, [this]() {
+    ui_->tabs->setCurrentIndex(ui_->tabs->IndexOfTab(collection_view_));
+    app_->collection()->model()->SetGroupBy(CollectionModel::Grouping(CollectionModel::GroupBy::Album));
+  });
+  QObject::connect(ui_->nav_albums, &QPushButton::clicked, this, [this]() {
+    ui_->tabs->setCurrentIndex(ui_->tabs->IndexOfTab(collection_view_));
+    app_->collection()->model()->SetGroupBy(CollectionModel::Grouping(CollectionModel::GroupBy::Album));
+  });
+  QObject::connect(ui_->nav_artists, &QPushButton::clicked, this, [this]() {
+    ui_->tabs->setCurrentIndex(ui_->tabs->IndexOfTab(collection_view_));
+    app_->collection()->model()->SetGroupBy(CollectionModel::Grouping(CollectionModel::GroupBy::Artist, CollectionModel::GroupBy::Album));
+  });
+  QObject::connect(ui_->nav_songs, &QPushButton::clicked, this, [this]() {
+    ui_->tabs->setCurrentIndex(ui_->tabs->IndexOfTab(collection_view_));
+    app_->collection()->model()->SetGroupBy(CollectionModel::Grouping(CollectionModel::GroupBy::None));
+  });
+  QObject::connect(ui_->nav_playlists, &QPushButton::clicked, this, [this]() {
+    ui_->tabs->setCurrentIndex(ui_->tabs->IndexOfTab(playlist_list_));
+  });
+
+  // Top header search
+  QObject::connect(ui_->header_search, &QLineEdit::textChanged, this, [this](const QString &text) {
+    if (ui_->tabs->currentIndex() == ui_->tabs->IndexOfTab(collection_view_)) {
+      collection_view_->filter_widget()->ShowInCollection(text);
+    }
+  });
+
+  // Top header settings button
+  ui_->header_settings->setIcon(IconLoader::Load(u"configure"_s, true, 0, 18));
+  QObject::connect(ui_->header_settings, &QToolButton::clicked, this, &MainWindow::OpenSettingsDialog);
+
+  // Top header application menu button
+  ui_->header_menu->setIcon(IconLoader::Load(u"application-menu"_s, true, 0, 18));
+  QMenu *app_menu = new QMenu(this);
+  app_menu->addMenu(ui_->menu_music);
+  app_menu->addMenu(ui_->menu_playlist);
+  app_menu->addMenu(ui_->menu_tools);
+  app_menu->addAction(ui_->action_settings);
+  app_menu->addMenu(ui_->menu_help);
+  ui_->header_menu->setMenu(app_menu);
+  ui_->header_menu->setPopupMode(QToolButton::InstantPopup);
+
+  // Modern UI: Hide 90s menubar, hide status bar, hide vertical tab bar
+  ui_->menuBar->setVisible(false);
+  ui_->status_bar->setVisible(false);
+  ui_->status_bar->setMaximumHeight(0);
+  ui_->tabs->tabBar()->setVisible(false);
+  ui_->tabs->tabBar()->setMaximumHeight(0);
+
+  // Sub-header: Shuffle All button → shuffle current playlist
+  QObject::connect(ui_->btn_shuffle_all, &QToolButton::clicked, this, [this]() {
+    app_->playlist_manager()->active()->Shuffle();
+  });
+
+  // Sub-header: update collection count label when library stats update
+  QObject::connect(app_->collection_model(), &CollectionModel::TotalAlbumCountUpdated, this, [this](int count) {
+    ui_->lbl_collection_count->setText(QStringLiteral("ALBUMS  ·  %1").arg(count));
+  });
+  QObject::connect(app_->collection_model(), &CollectionModel::TotalSongCountUpdated, this, [this](int count) {
+    ui_->lbl_songs_count->setText(QStringLiteral("SONGS  ·  %1").arg(count));
+  });
+
+  // Update sub-header label based on active nav tab
+  QObject::connect(ui_->nav_songs, &QPushButton::clicked, this, [this]() {
+    ui_->lbl_collection_count->setText(QStringLiteral("SONGS"));
+  });
+  QObject::connect(ui_->nav_artists, &QPushButton::clicked, this, [this]() {
+    ui_->lbl_collection_count->setText(QStringLiteral("ARTISTS"));
+  });
+  QObject::connect(ui_->nav_albums, &QPushButton::clicked, this, [this]() {
+    ui_->lbl_collection_count->setText(QStringLiteral("ALBUMS"));
+  });
+  QObject::connect(ui_->nav_home, &QPushButton::clicked, this, [this]() {
+    ui_->lbl_collection_count->setText(QStringLiteral("ALBUMS"));
+  });
+
   // Collection connections
   QObject::connect(&*app_->collection(), &CollectionLibrary::Error, this, &MainWindow::ShowErrorDialog);
   QObject::connect(collection_view_->view(), &CollectionView::AddToPlaylistSignal, this, &MainWindow::AddToPlaylist);
@@ -1061,10 +1151,11 @@ MainWindow::MainWindow(Application *app,
     restoreGeometry(settings.value(MainWindowSettings::kGeometry).toByteArray());
   }
 
-  ui_->sidebar_layout->setMinimumWidth(260);
-  ui_->playlist_layout->setMinimumWidth(380);
+  ui_->sidebar_layout->setMinimumWidth(300);
+  ui_->playlist_layout->setMinimumWidth(280);
   if (!settings.contains(MainWindowSettings::kSplitterState) || !ui_->splitter->restoreState(settings.value(MainWindowSettings::kSplitterState).toByteArray())) {
-    ui_->splitter->setSizes(QList<int>() << 340 << (width() - 340));
+    const int total = width() > 0 ? width() : 1200;
+    ui_->splitter->setSizes(QList<int>() << static_cast<int>(total * 0.62) << static_cast<int>(total * 0.38));
   }
 
   ui_->tabs->setCurrentIndex(settings.value(FancyTabWidget::kCurrentTab, 1).toInt());
@@ -1520,6 +1611,9 @@ void MainWindow::MediaStopped() {
   setWindowTitle(u"Aura Audio"_s);
   ui_->now_playing_title->setText(u"Aura Audio"_s);
   ui_->now_playing_artist->setText(u"Ready to play"_s);
+  ui_->now_playing_cover->clear();
+  ui_->audio_quality_badge->clear();
+  ui_->audio_quality_badge->hide();
 
   ui_->action_stop->setEnabled(false);
   ui_->action_stop_after_this_track->setEnabled(false);
@@ -2933,9 +3027,7 @@ void MainWindow::TaskCountChanged(const int count) {
 void MainWindow::PlayingWidgetPositionChanged(const bool above_status_bar) {
 
   Q_UNUSED(above_status_bar);
-  ui_->status_bar->setParent(ui_->player_controls_container);
-  ui_->player_controls_container->layout()->addWidget(ui_->status_bar);
-  ui_->status_bar->show();
+  ui_->status_bar->hide();
 
 }
 
@@ -3453,20 +3545,22 @@ void MainWindow::AlbumCoverLoaded(const Song &song, const AlbumCoverLoaderResult
   Q_EMIT AlbumCoverReady(song, result.album_cover.image);
 
   if (!result.album_cover.image.isNull()) {
-    QColor dominant = ImageUtils::ExtractDominantColor(result.album_cover.image);
-    QString ambientStyle = QStringLiteral(
-      "QFrame#player_controls {"
-      "  background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 rgba(%1, %2, %3, 0.42), stop:0.55 rgba(25, 28, 36, 0.82), stop:1 rgba(%1, %2, %3, 0.22));"
-      "  border: 1px solid rgba(%1, %2, %3, 0.45);"
-      "  border-radius: 14px;"
-      "  padding: 4px 12px;"
-      "  margin-bottom: 4px;"
-      "}"
-    ).arg(dominant.red()).arg(dominant.green()).arg(dominant.blue());
-    ui_->player_controls->setStyleSheet(ambientStyle);
+    QImage rounded_img(48, 48, QImage::Format_ARGB32_Premultiplied);
+    rounded_img.fill(Qt::transparent);
+    {
+      QPainter p(&rounded_img);
+      p.setRenderHint(QPainter::Antialiasing);
+      QPainterPath path;
+      path.addRoundedRect(0, 0, 48, 48, 8, 8);
+      p.setClipPath(path);
+      p.drawImage(QRect(0, 0, 48, 48), result.album_cover.image.scaled(48, 48, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation));
+    }
+    ui_->now_playing_cover->setPixmap(QPixmap::fromImage(rounded_img));
+    ui_->now_playing_cover->show();
   }
   else {
-    ui_->player_controls->setStyleSheet(u""_s);
+    ui_->now_playing_cover->clear();
+    ui_->now_playing_cover->hide();
   }
 
   const bool enable_change_art = song.is_local_collection_song() && !song.effective_albumartist().isEmpty() && !song.album().isEmpty();
@@ -3515,11 +3609,7 @@ void MainWindow::ScrobbleButtonVisibilityChanged(const bool value) {
 
 void MainWindow::LoveButtonVisibilityChanged(const bool value) {
 
-  if (value)
-    ui_->widget_love->show();
-  else
-    ui_->widget_love->hide();
-
+  ui_->button_love->setVisible(value);
   systemtrayicon_->LoveVisibilityChanged(value);
 
 }

@@ -418,24 +418,21 @@ void PlaylistView::RestoreHeaderState() {
     header_->ShowSection(static_cast<int>(Playlist::Column::Title));
     header_->ShowSection(static_cast<int>(Playlist::Column::Artist));
     header_->ShowSection(static_cast<int>(Playlist::Column::Album));
-    header_->ShowSection(static_cast<int>(Playlist::Column::Samplerate));
-    header_->ShowSection(static_cast<int>(Playlist::Column::Bitdepth));
-    header_->ShowSection(static_cast<int>(Playlist::Column::Bitrate));
-    header_->ShowSection(static_cast<int>(Playlist::Column::Filetype));
-    header_->ShowSection(static_cast<int>(Playlist::Column::Source));
+    header_->ShowSection(static_cast<int>(Playlist::Column::Length));
+
+    header_->HideSection(static_cast<int>(Playlist::Column::Samplerate));
+    header_->HideSection(static_cast<int>(Playlist::Column::Bitdepth));
+    header_->HideSection(static_cast<int>(Playlist::Column::Bitrate));
+    header_->HideSection(static_cast<int>(Playlist::Column::Filetype));
+    header_->HideSection(static_cast<int>(Playlist::Column::Source));
 
     header_->moveSection(header_->visualIndex(static_cast<int>(Playlist::Column::Track)), 0);
 
-    header_->SetColumnWidth(static_cast<int>(Playlist::Column::Track), 0.06);
-    header_->SetColumnWidth(static_cast<int>(Playlist::Column::Title), 0.23);
-    header_->SetColumnWidth(static_cast<int>(Playlist::Column::Artist), 0.23);
-    header_->SetColumnWidth(static_cast<int>(Playlist::Column::Album), 0.23);
-    header_->SetColumnWidth(static_cast<int>(Playlist::Column::Length), 0.04);
-    header_->SetColumnWidth(static_cast<int>(Playlist::Column::Samplerate), 0.05);
-    header_->SetColumnWidth(static_cast<int>(Playlist::Column::Bitdepth), 0.04);
-    header_->SetColumnWidth(static_cast<int>(Playlist::Column::Bitrate), 0.04);
-    header_->SetColumnWidth(static_cast<int>(Playlist::Column::Filetype), 0.04);
-    header_->SetColumnWidth(static_cast<int>(Playlist::Column::Source), 0.04);
+    header_->SetColumnWidth(static_cast<int>(Playlist::Column::Track), 0.08);
+    header_->SetColumnWidth(static_cast<int>(Playlist::Column::Title), 0.40);
+    header_->SetColumnWidth(static_cast<int>(Playlist::Column::Artist), 0.26);
+    header_->SetColumnWidth(static_cast<int>(Playlist::Column::Album), 0.16);
+    header_->SetColumnWidth(static_cast<int>(Playlist::Column::Length), 0.10);
 
     header_state_ = header_->SaveState();
     header_->RestoreState(header_state_);
