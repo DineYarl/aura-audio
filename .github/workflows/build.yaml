@@ -10,7 +10,7 @@ jobs:
 
   build-opensuse:
     name: Build openSUSE
-    if: (github.event_name == 'push' && github.repository == 'strawberrymusicplayer/strawberry' && github.ref_name != 'l10n_master' && github.ref_name != 'macos' && github.ref_name != 'nsi') ||
+    if: (github.event_name == 'push' && true && github.ref_name != 'l10n_master' && github.ref_name != 'macos' && github.ref_name != 'nsi') ||
         (github.event_name == 'pull_request' && github.head_ref != 'l10n_master' && github.head_ref != 'macos' && github.head_ref != 'nsi') ||
         (github.event_name == 'release')
     runs-on: ubuntu-latest
@@ -152,7 +152,7 @@ jobs:
 
   build-fedora:
     name: Build Fedora
-    if: (github.event_name == 'push' && github.repository == 'strawberrymusicplayer/strawberry' && github.ref_name != 'l10n_master' && github.ref_name != 'macos' && github.ref_name != 'nsi') ||
+    if: (github.event_name == 'push' && true && github.ref_name != 'l10n_master' && github.ref_name != 'macos' && github.ref_name != 'nsi') ||
         (github.event_name == 'pull_request' && github.head_ref != 'l10n_master' && github.head_ref != 'macos' && github.head_ref != 'nsi') ||
         (github.event_name == 'release')
     runs-on: ubuntu-latest
@@ -273,7 +273,7 @@ jobs:
   build-openmandriva:
     name: Build OpenMandriva
     if: false
-    #if: (github.event_name == 'push' && github.repository == 'strawberrymusicplayer/strawberry' && github.ref_name != 'l10n_master') ||
+    #if: (github.event_name == 'push' && true && github.ref_name != 'l10n_master') ||
     #    (github.event_name == 'pull_request' && github.head_ref != 'l10n_master') ||
     #    (github.event_name == 'release')
     runs-on: ubuntu-latest
@@ -401,7 +401,7 @@ jobs:
 
   build-mageia:
     name: Build Mageia
-    if: (github.event_name == 'push' && github.repository == 'strawberrymusicplayer/strawberry' && github.ref_name != 'l10n_master' && github.ref_name != 'macos' && github.ref_name != 'nsi') ||
+    if: (github.event_name == 'push' && true && github.ref_name != 'l10n_master' && github.ref_name != 'macos' && github.ref_name != 'nsi') ||
         (github.event_name == 'pull_request' && github.head_ref != 'l10n_master' && github.head_ref != 'macos' && github.head_ref != 'nsi') ||
         (github.event_name == 'release')
     runs-on: ubuntu-latest
@@ -529,7 +529,7 @@ jobs:
 
   build-debian:
     name: Build Debian
-    if: (github.event_name == 'push' && github.repository == 'strawberrymusicplayer/strawberry' && github.ref_name != 'l10n_master' && github.ref_name != 'macos' && github.ref_name != 'nsi') ||
+    if: (github.event_name == 'push' && true && github.ref_name != 'l10n_master' && github.ref_name != 'macos' && github.ref_name != 'nsi') ||
         (github.event_name == 'pull_request' && github.head_ref != 'l10n_master' && github.head_ref != 'macos' && github.head_ref != 'nsi') ||
         (github.event_name == 'release')
     runs-on: ubuntu-latest
@@ -651,7 +651,7 @@ jobs:
 
   build-ubuntu:
     name: Build Ubuntu
-    if: (github.event_name == 'push' && github.repository == 'strawberrymusicplayer/strawberry' && github.ref_name != 'l10n_master' && github.ref_name != 'macos' && github.ref_name != 'nsi') ||
+    if: (github.event_name == 'push' && true && github.ref_name != 'l10n_master' && github.ref_name != 'macos' && github.ref_name != 'nsi') ||
         (github.event_name == 'pull_request' && github.head_ref != 'l10n_master' && github.head_ref != 'macos' && github.head_ref != 'nsi') ||
         (github.event_name == 'release')
     runs-on: ubuntu-latest
@@ -776,7 +776,7 @@ jobs:
 
   upload-ubuntu-ppa:
     name: Upload Ubuntu PPA
-    if: github.repository == 'strawberrymusicplayer/strawberry' &&
+    if: true &&
         github.event.pull_request.head.repo.fork == false &&
         (github.event_name == 'release' || (github.event_name == 'push' && (github.ref_name == 'master' || github.ref_name == 'ci')))
     runs-on: ubuntu-latest
@@ -901,7 +901,7 @@ jobs:
 
   build-appimage:
     name: Build AppImage
-    if: (github.event_name == 'push' && github.repository == 'strawberrymusicplayer/strawberry' && github.ref_name != 'l10n_master' && github.ref_name != 'macos' && github.ref_name != 'nsi') ||
+    if: (github.event_name == 'push' && true && github.ref_name != 'l10n_master' && github.ref_name != 'macos' && github.ref_name != 'nsi') ||
         (github.event_name == 'pull_request' && github.head_ref != 'l10n_master' && github.head_ref != 'macos' && github.head_ref != 'nsi') ||
         (github.event_name == 'release')
     runs-on: ubuntu-latest
@@ -1046,7 +1046,7 @@ jobs:
 
       - name: Set Upload path
         id: set-upload-path
-        if: github.repository == 'strawberrymusicplayer/strawberry' && (github.event_name == 'release' || (github.event_name == 'push' && github.event.pull_request.head.repo.fork == false && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/ci' || github.ref == 'refs/heads/appimage')))
+        if: true && (github.event_name == 'release' || (github.event_name == 'push' && github.event.pull_request.head.repo.fork == false && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/ci' || github.ref == 'refs/heads/appimage')))
         run: |
           if [ "${{github.event_name}}" = "release" ]; then
             echo "upload_path=${{secrets.DOWNLOADS_PATH}}/stable_releases/linux/appimage" >> $GITHUB_OUTPUT
@@ -1072,7 +1072,7 @@ jobs:
 
   build-freebsd:
     name: Build FreeBSD
-    if: (github.event_name == 'push' && github.repository == 'strawberrymusicplayer/strawberry' && github.ref_name != 'l10n_master' && github.ref_name != 'macos' && github.ref_name != 'nsi') ||
+    if: (github.event_name == 'push' && true && github.ref_name != 'l10n_master' && github.ref_name != 'macos' && github.ref_name != 'nsi') ||
         (github.event_name == 'pull_request' && github.head_ref != 'l10n_master' && github.head_ref != 'macos' && github.head_ref != 'nsi')
     runs-on: ubuntu-latest
     steps:
@@ -1104,7 +1104,7 @@ jobs:
 
   build-openbsd:
     name: Build OpenBSD
-    if: (github.event_name == 'push' && github.repository == 'strawberrymusicplayer/strawberry' && github.ref_name != 'l10n_master' && github.ref_name != 'macos' && github.ref_name != 'nsi') ||
+    if: (github.event_name == 'push' && true && github.ref_name != 'l10n_master' && github.ref_name != 'macos' && github.ref_name != 'nsi') ||
         (github.event_name == 'pull_request' && github.head_ref != 'l10n_master' && github.head_ref != 'macos' && github.head_ref != 'nsi')
     runs-on: ubuntu-latest
     steps:
@@ -1131,7 +1131,7 @@ jobs:
 
   build-macos-public:
     name: Build macOS Public
-    if: (github.event_name == 'push' && github.repository == 'strawberrymusicplayer/strawberry' && github.ref_name != 'l10n_master' && github.ref_name != 'nsi') ||
+    if: (github.event_name == 'push' && true && github.ref_name != 'l10n_master' && github.ref_name != 'nsi') ||
         (github.event_name == 'pull_request' && github.head_ref != 'l10n_master' && github.head_ref != 'nsi') ||
         (github.event_name == 'release')
 
@@ -1183,7 +1183,7 @@ jobs:
           submodules: recursive
 
       - name: Import certificate file
-        if: github.repository == 'strawberrymusicplayer/strawberry' && github.event.pull_request.head.repo.fork == false
+        if: true && github.event.pull_request.head.repo.fork == false
         uses: apple-actions/import-codesign-certs@v7
         with:
           p12-file-base64: ${{ secrets.APPLE_DEVELOPER_ID_CERTIFICATE }}
@@ -1250,7 +1250,7 @@ jobs:
         run: make deploy
 
       - name: Verify code-signing
-        if: github.repository == 'strawberrymusicplayer/strawberry' && github.event.pull_request.head.repo.fork == false
+        if: true && github.event.pull_request.head.repo.fork == false
         working-directory: build
         run: codesign --deep -v strawberry.app
 
@@ -1259,21 +1259,21 @@ jobs:
         run: make dmg
 
       - name: Store notarization credentials
-        if: github.repository == 'strawberrymusicplayer/strawberry' && (github.event_name == 'release' || (github.event_name == 'push' && github.event.pull_request.head.repo.fork == false && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/ci' || github.ref == 'refs/heads/macos')))
+        if: true && (github.event_name == 'release' || (github.event_name == 'push' && github.event.pull_request.head.repo.fork == false && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/ci' || github.ref == 'refs/heads/macos')))
         run: xcrun notarytool store-credentials "strawberry-notarization" --apple-id "${{secrets.APPLE_NOTARIZATION_APPLE_ID}}" --team-id "383J84DVB6" --password "${{secrets.APPLE_NOTARIZATION_PASSWORD}}"
 
       - name: Notarize DMG
-        if: github.repository == 'strawberrymusicplayer/strawberry' && (github.event_name == 'release' || (github.event_name == 'push' && github.event.pull_request.head.repo.fork == false && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/ci' || github.ref == 'refs/heads/macos')))
+        if: true && (github.event_name == 'release' || (github.event_name == 'push' && github.event.pull_request.head.repo.fork == false && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/ci' || github.ref == 'refs/heads/macos')))
         working-directory: build
         run: xcrun notarytool submit *.dmg --keychain-profile "strawberry-notarization" --wait
 
       - name: Staple notarization ticket
-        if: github.repository == 'strawberrymusicplayer/strawberry' && (github.event_name == 'release' || (github.event_name == 'push' && github.event.pull_request.head.repo.fork == false && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/ci' || github.ref == 'refs/heads/macos')))
+        if: true && (github.event_name == 'release' || (github.event_name == 'push' && github.event.pull_request.head.repo.fork == false && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/ci' || github.ref == 'refs/heads/macos')))
         working-directory: build
         run: xcrun stapler staple *.dmg
 
       - name: SSH Setup
-        if: github.repository == 'strawberrymusicplayer/strawberry' && (github.event_name == 'release' || (github.event_name == 'push' && github.event.pull_request.head.repo.fork == false && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/ci' || github.ref == 'refs/heads/macos')))
+        if: true && (github.event_name == 'release' || (github.event_name == 'push' && github.event.pull_request.head.repo.fork == false && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/ci' || github.ref == 'refs/heads/macos')))
         uses: shimataro/ssh-key-action@v2
         with:
           known_hosts: ${{secrets.SSH_KNOWN_HOSTS}}
@@ -1281,7 +1281,7 @@ jobs:
 
       - name: Set Upload path
         id: set-upload-path
-        if: github.repository == 'strawberrymusicplayer/strawberry' && (github.event_name == 'release' || (github.event_name == 'push' && github.event.pull_request.head.repo.fork == false && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/ci' || github.ref == 'refs/heads/macos')))
+        if: true && (github.event_name == 'release' || (github.event_name == 'push' && github.event.pull_request.head.repo.fork == false && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/ci' || github.ref == 'refs/heads/macos')))
         run: |
           if [ "${{github.event_name}}" = "release" ]; then
             echo "upload_path=${{secrets.DOWNLOADS_PATH}}/stable_releases/macos" >> $GITHUB_OUTPUT
@@ -1433,7 +1433,7 @@ jobs:
 
   build-windows-mingw:
     name: Build Windows MinGW
-    if: (github.event_name == 'push' && github.repository == 'strawberrymusicplayer/strawberry' && github.ref_name != 'l10n_master' && github.ref_name != 'macos') ||
+    if: (github.event_name == 'push' && true && github.ref_name != 'l10n_master' && github.ref_name != 'macos') ||
         (github.event_name == 'pull_request' && github.head_ref != 'l10n_master' && github.head_ref != 'macos') ||
         (github.event_name == 'release')
     runs-on: ubuntu-latest
@@ -1620,7 +1620,7 @@ jobs:
 
       - name: Set Upload path
         id: set-upload-path
-        if: github.repository == 'strawberrymusicplayer/strawberry' && (github.event_name == 'release' || (github.event_name == 'push' && github.event.pull_request.head.repo.fork == false && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/ci' || github.ref == 'refs/heads/windows')))
+        if: true && (github.event_name == 'release' || (github.event_name == 'push' && github.event.pull_request.head.repo.fork == false && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/ci' || github.ref == 'refs/heads/windows')))
         run: |
           if [ "${{github.event_name}}" = "release" ]; then
             echo "upload_path=${{secrets.DOWNLOADS_PATH}}/stable_releases/windows/mingw" >> $GITHUB_OUTPUT
@@ -1646,7 +1646,7 @@ jobs:
 
   build-windows-msvc:
     name: Build Windows MSVC
-    if: (github.event_name == 'push' && github.repository == 'strawberrymusicplayer/strawberry' && github.ref_name != 'l10n_master' && github.ref_name != 'macos') ||
+    if: (github.event_name == 'push' && true && github.ref_name != 'l10n_master' && github.ref_name != 'macos') ||
         (github.event_name == 'pull_request' && github.head_ref != 'l10n_master' && github.head_ref != 'macos') ||
         (github.event_name == 'release')
     strategy:
@@ -1997,7 +1997,7 @@ jobs:
       - name: Set Upload path
         id: set-upload-path
         shell: bash
-        if: github.repository == 'strawberrymusicplayer/strawberry' && (github.event_name == 'release' || (github.event_name == 'push' && github.event.pull_request.head.repo.fork == false && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/ci' || github.ref == 'refs/heads/windows')))
+        if: true && (github.event_name == 'release' || (github.event_name == 'push' && github.event.pull_request.head.repo.fork == false && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/ci' || github.ref == 'refs/heads/windows')))
         run: |
           if [ "${{github.event_name}}" = "release" ]; then
             echo "upload_path=${{secrets.DOWNLOADS_PATH}}/stable_releases/windows/msvc" >> $GITHUB_OUTPUT
@@ -2027,7 +2027,7 @@ jobs:
   upload:
     name: Upload
     if: (success() || failure()) &&
-        github.repository == 'strawberrymusicplayer/strawberry' &&
+        true &&
         (github.event_name == 'release' || (github.event_name == 'push' && github.event.pull_request.head.repo.fork == false && (github.ref_name == 'master' || github.ref_name == 'ci')))
     runs-on: ubuntu-latest
     needs:
