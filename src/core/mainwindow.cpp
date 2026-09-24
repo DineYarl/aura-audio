@@ -476,8 +476,7 @@ MainWindow::MainWindow(Application *app,
   ui_->tabs->AddTab(qobuz_view_, u"qobuz"_s, IconLoader::Load(u"qobuz"_s, true, 0, 32), tr("Qobuz"));
 #endif
 
-  // Add the playing widget to the fancy tab widget
-  ui_->tabs->AddBottomWidget(ui_->widget_playing);
+  // Setup tabs
   ui_->tabs->SetBackgroundPixmap(QPixmap());
   ui_->tabs->LoadSettings(QLatin1String(MainWindowSettings::kSettingsGroup));
 
@@ -1062,8 +1061,10 @@ MainWindow::MainWindow(Application *app,
     restoreGeometry(settings.value(MainWindowSettings::kGeometry).toByteArray());
   }
 
+  ui_->sidebar_layout->setMinimumWidth(260);
+  ui_->playlist_layout->setMinimumWidth(380);
   if (!settings.contains(MainWindowSettings::kSplitterState) || !ui_->splitter->restoreState(settings.value(MainWindowSettings::kSplitterState).toByteArray())) {
-    ui_->splitter->setSizes(QList<int>() << 20 << (width() - 20));
+    ui_->splitter->setSizes(QList<int>() << 340 << (width() - 340));
   }
 
   ui_->tabs->setCurrentIndex(settings.value(FancyTabWidget::kCurrentTab, 1).toInt());
@@ -1517,6 +1518,8 @@ void MainWindow::PlaylistsLoaded() {
 void MainWindow::MediaStopped() {
 
   setWindowTitle(u"Aura Audio"_s);
+  ui_->now_playing_title->setText(u"Aura Audio"_s);
+  ui_->now_playing_artist->setText(u"Ready to play"_s);
 
   ui_->action_stop->setEnabled(false);
   ui_->action_stop_after_this_track->setEnabled(false);
@@ -1634,6 +1637,9 @@ void MainWindow::SongChanged(const Song &song) {
   song_ = song;
   setWindowTitle(song.PrettyTitleWithArtist() + u" — Aura Audio"_s);
   systemtrayicon_->SetProgress(0);
+
+  ui_->now_playing_title->setText(song.title().isEmpty() ? song.PrettyTitle() : song.title());
+  ui_->now_playing_artist->setText(song.artist().isEmpty() ? tr("Unknown Artist") : song.artist());
 
 #ifdef HAVE_DBUS
   if (taskbar_progress_) {
@@ -2926,10 +2932,9 @@ void MainWindow::TaskCountChanged(const int count) {
 
 void MainWindow::PlayingWidgetPositionChanged(const bool above_status_bar) {
 
-  if (above_status_bar) ui_->status_bar->setParent(ui_->centralWidget);
-  else ui_->status_bar->setParent(ui_->player_controls_container);
-
-  ui_->status_bar->parentWidget()->layout()->addWidget(ui_->status_bar);
+  Q_UNUSED(above_status_bar);
+  ui_->status_bar->setParent(ui_->player_controls_container);
+  ui_->player_controls_container->layout()->addWidget(ui_->status_bar);
   ui_->status_bar->show();
 
 }

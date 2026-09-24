@@ -51,6 +51,20 @@ QWidget#sidebar_layout {
   color: #ffffff;
 }
 
+/* --- Bottom Player Track Info --- */
+QLabel#now_playing_title {
+  color: #FFFFFF;
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.2px;
+}
+
+QLabel#now_playing_artist {
+  color: #8E92A4;
+  font-weight: 500;
+  font-size: 11px;
+}
+
 /* --- Floating Glass Playback Deck --- */
 QWidget#player_controls_container {
   background: transparent;
@@ -390,6 +404,45 @@ QTextEdit#textedit_play_lyrics {
   padding: 16px 24px;
   selection-background-color: %palette-highlight;
   selection-color: %palette-highlightedtext;
+}
+
+/* --- Sleek Modern Menu Bar --- */
+QMenuBar {
+  background-color: #111218;
+  color: #B0B4C8;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 2px 8px;
+  font-size: 12px;
+}
+
+QMenuBar::item {
+  background: transparent;
+  padding: 4px 10px;
+  border-radius: 6px;
+}
+
+QMenuBar::item:selected {
+  background-color: rgba(255, 255, 255, 0.08);
+  color: #FFFFFF;
+}
+
+/* --- Modern Playlist Toolbar --- */
+#toolbar {
+  background-color: #13141D;
+  border: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 4px 8px;
+}
+
+#toolbar QToolButton {
+  border: none;
+  border-radius: 8px;
+  padding: 4px;
+  background: transparent;
+}
+
+#toolbar QToolButton:hover {
+  background-color: rgba(255, 255, 255, 0.08);
 }
 
 
