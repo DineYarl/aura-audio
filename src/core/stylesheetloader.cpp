@@ -114,7 +114,9 @@ void StyleSheetLoader::UpdateStyleSheet(QWidget *widget, SharedPtr<StyleSheetDat
   stylesheet.replace(QLatin1String("macos"), QLatin1String("*"));
 #endif
 
-  widget->setStyleSheet(stylesheet);
+  if (widget->styleSheet() != stylesheet) {
+    widget->setStyleSheet(stylesheet);
+  }
 
 }
 
@@ -131,7 +133,9 @@ bool StyleSheetLoader::eventFilter(QObject *obj, QEvent *event) {
   if (event->type() == QEvent::PaletteChange) {
     QWidget *widget = qobject_cast<QWidget*>(obj);
     if (widget && styledata_.contains(widget)) {
+      widget->removeEventFilter(this);
       UpdateStyleSheet(widget, styledata_[widget]);
+      widget->installEventFilter(this);
     }
   }
 
