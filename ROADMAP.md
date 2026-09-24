@@ -32,8 +32,8 @@
 - [x] Centered, uncluttered lyrics layout with generous line spacing.
 - [x] Clean modern typography and high-contrast translucent styling.
 
-### Phase 6: Multi-Platform CI/CD & GitHub Launch *(NEXT UP)*
-- [ ] Project name, logo, and identity.
-- [ ] GitHub Actions CI for Linux (AppImage, deb), Windows (installer, zip), and macOS (dmg).
-- [ ] High-impact GitHub README with screenshots, comparison tables, and quick-start guide.
-- [ ] GPLv3 compliance and author attributions.
+### Phase 6: Multi-Platform CI/CD & GitHub Launch *(COMPLETED)*
+- [x] Project name: **Aura Audio Player** (*Audiophile Fidelity × Minimalist Glass Aesthetic*).
+- [x] Multi-platform GitHub Actions CI workflow in `.github/workflows/aura-ci.yaml`.
+- [x] Showcase GitHub README with comparison table and badges.
+- [x] Full GPLv3 compliance and author attributions.
