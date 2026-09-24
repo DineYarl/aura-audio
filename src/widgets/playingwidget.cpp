@@ -32,6 +32,7 @@
 #include <QMenu>
 #include <QMovie>
 #include <QPainter>
+#include <QPainterPath>
 #include <QTextDocument>
 #include <QTimeLine>
 #include <QAction>
@@ -449,8 +450,16 @@ void PlayingWidget::DrawContents(QPainter *p) {
 
   switch (mode_) {
     case Mode::SmallSongDetails:
-      // Draw the cover
-      p->drawPixmap(0, 0, small_ideal_height_, small_ideal_height_, pixmap_cover_);
+      // Draw the cover with rounded corners
+      if (!pixmap_cover_.isNull()) {
+        p->save();
+        p->setRenderHint(QPainter::Antialiasing);
+        QPainterPath path;
+        path.addRoundedRect(QRectF(0, 0, small_ideal_height_, small_ideal_height_), 8.0, 8.0);
+        p->setClipPath(path);
+        p->drawPixmap(0, 0, small_ideal_height_, small_ideal_height_, pixmap_cover_);
+        p->restore();
+      }
       if (downloading_covers_ && spinner_animation_) {
         p->drawPixmap(small_ideal_height_ - 18, 6, 16, 16, spinner_animation_->currentPixmap());
       }
@@ -467,8 +476,16 @@ void PlayingWidget::DrawContents(QPainter *p) {
       const int cover_size = fit_width_ ? width() : qMin(kMaxCoverSize, width());
       const int x_offset = (width() - desired_height_) / 2;
 
-      // Draw the cover
-      p->drawPixmap(x_offset, kTopBorder, cover_size, cover_size, pixmap_cover_);
+      // Draw the cover with rounded corners
+      if (!pixmap_cover_.isNull()) {
+        p->save();
+        p->setRenderHint(QPainter::Antialiasing);
+        QPainterPath path;
+        path.addRoundedRect(QRectF(x_offset, kTopBorder, cover_size, cover_size), 12.0, 12.0);
+        p->setClipPath(path);
+        p->drawPixmap(x_offset, kTopBorder, cover_size, cover_size, pixmap_cover_);
+        p->restore();
+      }
       if (downloading_covers_ && spinner_animation_) {
         p->drawPixmap(x_offset + 45, 35, 16, 16, spinner_animation_->currentPixmap());
       }

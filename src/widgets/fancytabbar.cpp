@@ -177,43 +177,27 @@ void FancyTabBar::paintEvent(QPaintEvent *pe) {
     QRect tabrect = tabRect(index);
     QRect selectionRect = tabrect;
     if (selected) {
-      // Selection highlight
+      // Modern capsule / pill selection highlight
       p.save();
-      QLinearGradient grad(selectionRect.topLeft(), selectionRect.topRight());
-      grad.setColorAt(0, QColor(255, 255, 255, 140));
-      grad.setColorAt(1, QColor(255, 255, 255, 210));
-      p.fillRect(selectionRect.adjusted(0, 0, 0, -1), grad);
+      p.setRenderHint(QPainter::Antialiasing);
+      QRect pillRect = selectionRect.adjusted(6, 3, -6, -3);
+      QColor highlightColor = palette().color(QPalette::Highlight);
+      QColor activeBg(highlightColor.red(), highlightColor.green(), highlightColor.blue(), 55);
+      QColor activeBorder(highlightColor.red(), highlightColor.green(), highlightColor.blue(), 140);
+      p.setPen(QPen(activeBorder, 1.2));
+      p.setBrush(activeBg);
+      p.drawRoundedRect(pillRect, 8.0, 8.0);
       p.restore();
-
-      // shadow lines
-      p.setPen(QColor(0, 0, 0, 110));
-      p.drawLine(selectionRect.topLeft()    + QPoint(1, -1), selectionRect.topRight()    - QPoint(0, 1));
-      p.drawLine(selectionRect.bottomLeft(), selectionRect.bottomRight());
-      p.setPen(QColor(0, 0, 0, 40));
-      p.drawLine(selectionRect.topLeft(),    selectionRect.bottomLeft());
-
-      // highlights
-      p.setPen(QColor(255, 255, 255, 50));
-      p.drawLine(selectionRect.topLeft()    + QPoint(0, -2), selectionRect.topRight()    - QPoint(0, 2));
-      p.drawLine(selectionRect.bottomLeft() + QPoint(0, 1),  selectionRect.bottomRight() + QPoint(0, 1));
-      p.setPen(QColor(255, 255, 255, 40));
-      p.drawLine(selectionRect.topLeft()    + QPoint(0, 0),  selectionRect.topRight());
-      p.drawLine(selectionRect.topRight()   + QPoint(0, 1),  selectionRect.bottomRight() - QPoint(0, 1));
-      p.drawLine(selectionRect.bottomLeft() + QPoint(0, -1), selectionRect.bottomRight() - QPoint(0, 1));
-
     }
 
-    // Mouse hover effect
+    // Modern mouse hover effect
     if (!selected && index == mouseHoverTabIndex && isTabEnabled(index)) {
       p.save();
-      QLinearGradient grad(selectionRect.topLeft(),  selectionRect.topRight());
-      grad.setColorAt(0, Qt::transparent);
-      grad.setColorAt(0.5, QColor(255, 255, 255, 40));
-      grad.setColorAt(1, Qt::transparent);
-      p.fillRect(selectionRect, grad);
-      p.setPen(QPen(grad, 1.0));
-      p.drawLine(selectionRect.topLeft(),     selectionRect.topRight());
-      p.drawLine(selectionRect.bottomRight(), selectionRect.bottomLeft());
+      p.setRenderHint(QPainter::Antialiasing);
+      QRect pillRect = selectionRect.adjusted(6, 3, -6, -3);
+      p.setPen(Qt::NoPen);
+      p.setBrush(QColor(255, 255, 255, 18));
+      p.drawRoundedRect(pillRect, 8.0, 8.0);
       p.restore();
     }
 

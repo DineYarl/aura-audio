@@ -102,19 +102,19 @@
                </property>
                <layout class="QHBoxLayout" name="layout_player_controls">
                 <property name="spacing">
-                 <number>1</number>
+                 <number>6</number>
                 </property>
                 <property name="leftMargin">
-                 <number>0</number>
+                 <number>8</number>
                 </property>
                 <property name="topMargin">
-                 <number>0</number>
+                 <number>4</number>
                 </property>
                 <property name="rightMargin">
-                 <number>0</number>
+                 <number>8</number>
                 </property>
                 <property name="bottomMargin">
-                 <number>0</number>
+                 <number>4</number>
                 </property>
                 <item>
                  <widget class="QToolButton" name="back_button">
