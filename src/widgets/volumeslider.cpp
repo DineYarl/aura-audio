@@ -110,35 +110,49 @@ void VolumeSlider::paintEvent(QPaintEvent *e) {
   Q_UNUSED(e)
 
   QPainter p(this);
+  p.setRenderHint(QPainter::Antialiasing);
 
-  const int padding = 7;
-  const int offset = static_cast<int>(static_cast<double>((width() - 2 * padding) * value()) / qMax(1, maximum()));
+  const int w = width();
+  const int h = height();
+  const int padding = 8;
+  const int track_h = 4;
+  const int track_y = (h - track_h) / 2 + 3;
+  const int track_w = w - (2 * padding);
 
-  // If theme changed since last paintEvent, redraw the volume pixmap with new theme colors
-  if (previous_theme_text_color_ != palette().color(QPalette::WindowText)) {
-    pixmap_inset_ = drawVolumePixmap();
-    previous_theme_text_color_ = palette().color(QPalette::WindowText);
+  const double ratio = qBound(0.0, static_cast<double>(value()) / qMax(1, maximum()), 1.0);
+  const int active_w = static_cast<int>(track_w * ratio);
+
+  // Background track (subtle translucent groove)
+  QRect trackRect(padding, track_y, track_w, track_h);
+  p.setPen(Qt::NoPen);
+  p.setBrush(QColor(255, 255, 255, 30));
+  p.drawRoundedRect(trackRect, 2, 2);
+
+  // Active track (accent glow)
+  if (active_w > 0) {
+    QRect activeRect(padding, track_y, active_w, track_h);
+    QColor accent = palette().color(QPalette::Highlight);
+    p.setBrush(accent);
+    p.drawRoundedRect(activeRect, 2, 2);
   }
 
-  if (previous_theme_highlight_color_ != palette().color(QPalette::Highlight)) {
-    drawVolumeSliderHandle();
-    previous_theme_highlight_color_ = palette().color(QPalette::Highlight);
-  }
+  // Thumb handle
+  const int handle_radius = anim_enter_ ? 6 : 5;
+  const int handle_x = padding + active_w;
+  const int handle_y = track_y + (track_h / 2);
+  p.setBrush(QColor(255, 255, 255));
+  p.setPen(QPen(QColor(0, 0, 0, 40), 1.0));
+  p.drawEllipse(QPoint(handle_x, handle_y), handle_radius, handle_radius);
 
-  p.drawPixmap(0, 0, pixmap_gradient_, 0, 0, offset + padding, 0);
-  p.drawPixmap(0, 0, pixmap_inset_);
-  p.drawPixmap(offset - handle_pixmaps_.value(0).width() / 2 + padding, 0, handle_pixmaps_[anim_count_]);
-
-  // Draw percentage number, or "Muted" in its place when muted
-  QStyleOptionViewItem opt;
-  p.setPen(opt.palette.color(QPalette::Normal, QPalette::Text));
-  QFont vol_font(opt.font);
-  vol_font.setPixelSize(9);
+  // Draw percentage number or "Muted"
+  p.setPen(QColor(200, 205, 220, 200));
+  QFont vol_font = p.font();
+  vol_font.setPixelSize(10);
+  vol_font.setBold(true);
   p.setFont(vol_font);
-
   const QString text = muted_ ? tr("Muted") : QString::number(value()) + QLatin1Char('%');
-  const QRect rect(0, 0, 34, 15);
-  p.drawText(rect, Qt::AlignRight | Qt::AlignVCenter, text);
+  QRect textRect(0, 0, w - padding, 14);
+  p.drawText(textRect, Qt::AlignRight | Qt::AlignVCenter, text);
 
 }
 

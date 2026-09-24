@@ -339,27 +339,51 @@ void CollectionView::paintEvent(QPaintEvent *event) {
 
   if (total_song_count_ == 0) {
     QPainter p(viewport());
+    p.setRenderHint(QPainter::Antialiasing);
     QRect rect(viewport()->rect());
 
-    // Draw the confused strawberry
-    QRect image_rect((rect.width() - nomusic_.width()) / 2, 50, nomusic_.width(), nomusic_.height());
-    p.drawPixmap(image_rect, nomusic_);
+    // Elegant modern empty state
+    const int icon_size = 56;
+    const int icon_y = (rect.height() / 2) - 70;
+    QRect image_rect((rect.width() - icon_size) / 2, icon_y > 40 ? icon_y : 40, icon_size, icon_size);
+
+    // Draw modern vinyl disc icon
+    p.setPen(QPen(QColor(67, 100, 247, 180), 2.0));
+    p.setBrush(QColor(22, 25, 36, 210));
+    p.drawEllipse(image_rect);
+
+    // Inner ring
+    QRect inner_rect = image_rect.adjusted(14, 14, -14, -14);
+    p.setPen(QPen(QColor(255, 255, 255, 50), 1.2));
+    p.setBrush(Qt::NoBrush);
+    p.drawEllipse(inner_rect);
+
+    // Center dot
+    QRect center_dot = image_rect.adjusted(24, 24, -24, -24);
+    p.setPen(Qt::NoPen);
+    p.setBrush(QColor(67, 100, 247));
+    p.drawEllipse(center_dot);
 
     // Draw the title text
     QFont bold_font;
+    bold_font.setPointSize(13);
     bold_font.setBold(true);
     p.setFont(bold_font);
+    p.setPen(QColor(240, 243, 250));
 
     QFontMetrics metrics(bold_font);
+    QRect title_rect(0, image_rect.bottom() + 20, rect.width(), metrics.height() + 4);
+    p.drawText(title_rect, Qt::AlignHCenter, tr("Your Music Library is Empty"));
 
-    QRect title_rect(0, image_rect.bottom() + 20, rect.width(), metrics.height());
-    p.drawText(title_rect, Qt::AlignHCenter, tr("Your collection is empty!"));
+    // Draw the subtitle text
+    QFont sub_font;
+    sub_font.setPointSize(10);
+    p.setFont(sub_font);
+    p.setPen(QColor(140, 145, 165));
 
-    // Draw the other text
-    p.setFont(QFont());
-
-    QRect text_rect(0, title_rect.bottom() + 5, rect.width(), metrics.height());
-    p.drawText(text_rect, Qt::AlignHCenter, tr("Click here to add some music"));
+    QFontMetrics sub_metrics(sub_font);
+    QRect text_rect(0, title_rect.bottom() + 6, rect.width(), sub_metrics.height() + 4);
+    p.drawText(text_rect, Qt::AlignHCenter, tr("Click here to configure collection folders"));
   }
   else {
     QTreeView::paintEvent(event);

@@ -199,8 +199,8 @@ int main(int argc, char *argv[]) {
   Utilities::IncreaseFDLimit();
 #endif
 
-  QGuiApplication::setApplicationDisplayName(u"Strawberry Music Player"_s);
-  QGuiApplication::setDesktopFileName(u"org.strawberrymusicplayer.strawberry"_s);
+  QGuiApplication::setApplicationDisplayName(u"Aura Audio"_s);
+  QGuiApplication::setDesktopFileName(u"aura-audio"_s);
   QGuiApplication::setQuitOnLastWindowClosed(false);
 
   QApplication a(argc, argv);

@@ -53,13 +53,7 @@ void StyleSheetLoader::SetStyleSheet(QWidget *widget, const QString &filename) {
     qLog(Error) << "Could not open stylesheet file" << filename << "for reading:" << file.errorString();
     return;
   }
-  QTextStream stream(&file);
-  QString stylesheet;
-  Q_FOREVER {
-    QString line = stream.readLine();
-    stylesheet.append(line);
-    if (stream.atEnd()) break;
-  }
+  QString stylesheet = QString::fromUtf8(file.readAll());
   file.close();
 
   SharedPtr<StyleSheetData> styledata = make_shared<StyleSheetData>();

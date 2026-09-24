@@ -455,12 +455,12 @@ MainWindow::MainWindow(Application *app,
   StyleHelper::setBaseColor(palette().color(QPalette::Highlight).darker());
 
   // Add tabs to the fancy tab widget
-  ui_->tabs->AddTab(context_view_, u"context"_s, IconLoader::Load(u"strawberry"_s, true, 0, 32), tr("Context"));
+  ui_->tabs->AddTab(context_view_, u"context"_s, IconLoader::Load(u"view-media-lyrics"_s, true, 0, 32), tr("Now Playing"));
   ui_->tabs->AddTab(collection_view_, u"collection"_s, IconLoader::Load(u"library-music"_s, true, 0, 32), tr("Collection"));
-  ui_->tabs->AddTab(queue_view_, u"queue"_s, IconLoader::Load(u"footsteps"_s, true, 0, 32), tr("Queue"));
+  ui_->tabs->AddTab(queue_view_, u"queue"_s, IconLoader::Load(u"view-media-playlist"_s, true, 0, 32), tr("Queue"));
   ui_->tabs->AddTab(playlist_list_, u"playlists"_s, IconLoader::Load(u"view-media-playlist"_s, true, 0, 32), tr("Playlists"));
   ui_->tabs->AddTab(smartplaylists_view_, u"smartplaylists"_s, IconLoader::Load(u"view-media-playlist"_s, true, 0, 32), tr("Smart playlists"));
-  ui_->tabs->AddTab(file_view_, u"files"_s, IconLoader::Load(u"document-open"_s, true, 0, 32), tr("Files"));
+  ui_->tabs->AddTab(file_view_, u"files"_s, IconLoader::Load(u"folder-sound"_s, true, 0, 32), tr("Files"));
   ui_->tabs->AddTab(radio_view_, u"radios"_s, IconLoader::Load(u"radio"_s, true, 0, 32), tr("Radios"));
   ui_->tabs->AddTab(device_view_, u"devices"_s, IconLoader::Load(u"device"_s, true, 0, 32), tr("Devices"));
 #ifdef HAVE_SUBSONIC
@@ -478,7 +478,7 @@ MainWindow::MainWindow(Application *app,
 
   // Add the playing widget to the fancy tab widget
   ui_->tabs->AddBottomWidget(ui_->widget_playing);
-  ui_->tabs->SetBackgroundPixmap(QPixmap(u":/pictures/sidebar-background.png"_s));
+  ui_->tabs->SetBackgroundPixmap(QPixmap());
   ui_->tabs->LoadSettings(QLatin1String(MainWindowSettings::kSettingsGroup));
 
   track_position_timer_->setInterval(kTrackPositionUpdateTimeMs);
@@ -1516,7 +1516,7 @@ void MainWindow::PlaylistsLoaded() {
 
 void MainWindow::MediaStopped() {
 
-  setWindowTitle(u"Strawberry Music Player"_s);
+  setWindowTitle(u"Aura Audio"_s);
 
   ui_->action_stop->setEnabled(false);
   ui_->action_stop_after_this_track->setEnabled(false);
@@ -1632,7 +1632,7 @@ void MainWindow::SongChanged(const Song &song) {
 
   song_playing_ = song;
   song_ = song;
-  setWindowTitle(song.PrettyTitleWithArtist());
+  setWindowTitle(song.PrettyTitleWithArtist() + u" — Aura Audio"_s);
   systemtrayicon_->SetProgress(0);
 
 #ifdef HAVE_DBUS

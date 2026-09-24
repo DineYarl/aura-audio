@@ -31,6 +31,10 @@
 #include <QSize>
 #include <QSettings>
 
+#include <QPainter>
+#include <QPolygonF>
+#include <QRectF>
+
 #include "logging.h"
 #include "standardpaths.h"
 #include "settings.h"
@@ -43,6 +47,64 @@ using namespace Qt::Literals::StringLiterals;
 bool IconLoader::system_icons_ = false;
 bool IconLoader::custom_icons_ = false;
 bool IconLoader::svg_supported_ = false;
+
+namespace {
+
+QIcon CreateModernTransportIcon(const QString &name) {
+  QIcon icon;
+  for (int s : { 22, 32, 48, 64 }) {
+    QPixmap pixmap(s, s);
+    pixmap.fill(Qt::transparent);
+    QPainter p(&pixmap);
+    p.setRenderHint(QPainter::Antialiasing);
+    p.setPen(Qt::NoPen);
+    p.setBrush(QColor(245, 248, 255));
+
+    const qreal sz = s;
+    if (name == u"media-playback-start"_s) {
+      QPolygonF triangle;
+      triangle << QPointF(sz * 0.32, sz * 0.22)
+               << QPointF(sz * 0.78, sz * 0.50)
+               << QPointF(sz * 0.32, sz * 0.78);
+      p.drawPolygon(triangle);
+    }
+    else if (name == u"media-playback-pause"_s) {
+      const qreal barW = sz * 0.16;
+      const qreal barH = sz * 0.54;
+      const qreal barY = sz * 0.23;
+      p.drawRoundedRect(QRectF(sz * 0.28, barY, barW, barH), 2.0, 2.0);
+      p.drawRoundedRect(QRectF(sz * 0.56, barY, barW, barH), 2.0, 2.0);
+    }
+    else if (name == u"media-playback-stop"_s) {
+      const qreal b = sz * 0.44;
+      const qreal xy = (sz - b) / 2.0;
+      p.drawRoundedRect(QRectF(xy, xy, b, b), 2.5, 2.5);
+    }
+    else if (name == u"media-skip-backward"_s) {
+      p.drawRoundedRect(QRectF(sz * 0.20, sz * 0.25, sz * 0.10, sz * 0.50), 1.5, 1.5);
+      QPolygonF triangle;
+      triangle << QPointF(sz * 0.76, sz * 0.25)
+               << QPointF(sz * 0.34, sz * 0.50)
+               << QPointF(sz * 0.76, sz * 0.75);
+      p.drawPolygon(triangle);
+    }
+    else if (name == u"media-skip-forward"_s) {
+      QPolygonF triangle;
+      triangle << QPointF(sz * 0.24, sz * 0.25)
+               << QPointF(sz * 0.66, sz * 0.50)
+               << QPointF(sz * 0.24, sz * 0.75);
+      p.drawPolygon(triangle);
+      p.drawRoundedRect(QRectF(sz * 0.70, sz * 0.25, sz * 0.10, sz * 0.50), 1.5, 1.5);
+    }
+    else {
+      return QIcon();
+    }
+    icon.addPixmap(pixmap);
+  }
+  return icon;
+}
+
+}  // namespace
 
 void IconLoader::Init() {
 
@@ -69,6 +131,11 @@ QIcon IconLoader::Load(const QString &name, const bool system_icon, const int fi
   if (name.isEmpty()) {
     qLog(Error) << "Icon name is empty!";
     return ret;
+  }
+
+  if (name.startsWith(u"media-playback-"_s) || name.startsWith(u"media-skip-"_s)) {
+    QIcon modern = CreateModernTransportIcon(name);
+    if (!modern.isNull()) return modern;
   }
 
   QList<int> sizes;

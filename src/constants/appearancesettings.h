@@ -82,13 +82,13 @@ constexpr char kIconSizePlaylistButtons[] = "icon_size_playlist_buttons";
 constexpr char kIconSizeLeftPanelButtons[] = "icon_size_left_panel_buttons";
 constexpr char kIconSizeConfigureButtons[] = "icon_size_configure_buttons";
 
-constexpr bool kDefaultDarkMode = false;
+constexpr bool kDefaultDarkMode = true;
 constexpr bool kDefaultSystemIcons = false;
-constexpr bool kDefaultUseCustomColorSet = false;
+constexpr bool kDefaultUseCustomColorSet = true;
 constexpr bool kDefaultTabBarSystemColor = false;
-constexpr bool kDefaultTabBarGradient = true;
+constexpr bool kDefaultTabBarGradient = false;
 
-constexpr BackgroundImageType kDefaultBackgroundImageType = BackgroundImageType::Default;
+constexpr BackgroundImageType kDefaultBackgroundImageType = BackgroundImageType::None;
 constexpr BackgroundImagePosition kDefaultBackgroundImagePosition = BackgroundImagePosition::BottomRight;
 constexpr int kDefaultBackgroundImageMaxSize = 0;
 constexpr bool kDefaultBackgroundImageStretch = false;

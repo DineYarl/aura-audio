@@ -177,16 +177,17 @@ void FancyTabBar::paintEvent(QPaintEvent *pe) {
     QRect tabrect = tabRect(index);
     QRect selectionRect = tabrect;
     if (selected) {
-      // Modern capsule / pill selection highlight
+      // Modern sleek glowing capsule pill
       p.save();
       p.setRenderHint(QPainter::Antialiasing);
-      QRect pillRect = selectionRect.adjusted(6, 3, -6, -3);
+      QRect pillRect = selectionRect.adjusted(8, 4, -8, -4);
       QColor highlightColor = palette().color(QPalette::Highlight);
-      QColor activeBg(highlightColor.red(), highlightColor.green(), highlightColor.blue(), 55);
-      QColor activeBorder(highlightColor.red(), highlightColor.green(), highlightColor.blue(), 140);
-      p.setPen(QPen(activeBorder, 1.2));
-      p.setBrush(activeBg);
-      p.drawRoundedRect(pillRect, 8.0, 8.0);
+      QLinearGradient pillGrad(pillRect.topLeft(), pillRect.bottomRight());
+      pillGrad.setColorAt(0, QColor(highlightColor.red(), highlightColor.green(), highlightColor.blue(), 55));
+      pillGrad.setColorAt(1, QColor(highlightColor.red(), highlightColor.green(), highlightColor.blue(), 25));
+      p.setPen(QPen(QColor(highlightColor.red(), highlightColor.green(), highlightColor.blue(), 150), 1.2));
+      p.setBrush(pillGrad);
+      p.drawRoundedRect(pillRect, 9.0, 9.0);
       p.restore();
     }
 
@@ -194,10 +195,10 @@ void FancyTabBar::paintEvent(QPaintEvent *pe) {
     if (!selected && index == mouseHoverTabIndex && isTabEnabled(index)) {
       p.save();
       p.setRenderHint(QPainter::Antialiasing);
-      QRect pillRect = selectionRect.adjusted(6, 3, -6, -3);
-      p.setPen(Qt::NoPen);
-      p.setBrush(QColor(255, 255, 255, 18));
-      p.drawRoundedRect(pillRect, 8.0, 8.0);
+      QRect pillRect = selectionRect.adjusted(8, 4, -8, -4);
+      p.setPen(QPen(QColor(255, 255, 255, 20), 1.0));
+      p.setBrush(QColor(255, 255, 255, 12));
+      p.drawRoundedRect(pillRect, 9.0, 9.0);
       p.restore();
     }
 
@@ -235,18 +236,18 @@ void FancyTabBar::paintEvent(QPaintEvent *pe) {
 
       p.setTransform(m);
 
-      QFont boldFont(p.font());
-      boldFont.setBold(true);
-      p.setFont(boldFont);
+      QFont tabFont(p.font());
+      tabFont.setPixelSize(11);
+      tabFont.setBold(selected);
+      p.setFont(tabFont);
 
-      // Text drop shadow color
-      p.setPen(selected ? QColor(255, 255, 255, 160) : QColor(0, 0, 0, 110));
-      p.translate(0, 3);
-      p.drawText(tabrectText, textFlags, TabText(index));
-
-      // Text foreground color
-      p.translate(0, -1);
-      p.setPen(selected ? QColor(60, 60, 60) : StyleHelper::panelTextColor());
+      // Clean modern typography
+      if (selected) {
+        p.setPen(QColor(255, 255, 255, 245));
+      }
+      else {
+        p.setPen(QColor(155, 160, 175, index == mouseHoverTabIndex ? 230 : 170));
+      }
       p.drawText(tabrectText, textFlags, TabText(index));
 
 

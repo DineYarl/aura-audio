@@ -86,17 +86,19 @@ const QList<Appearance::ColorRole> &Appearance::ColorRoles() {
 const QMap<QPalette::ColorRole, QColor> &Appearance::DarkColors() {
 
   static const QMap<QPalette::ColorRole, QColor> dark_colors = {
-    { QPalette::Window, QColor(53, 53, 53) },
-    { QPalette::WindowText, QColor(240, 240, 240) },
-    { QPalette::Base, QColor(35, 35, 35) },
-    { QPalette::AlternateBase, QColor(53, 53, 53) },
-    { QPalette::Text, QColor(240, 240, 240) },
-    { QPalette::Button, QColor(53, 53, 53) },
-    { QPalette::ButtonText, QColor(240, 240, 240) },
-    { QPalette::BrightText, QColor(255, 80, 80) },
-    { QPalette::PlaceholderText, QColor(140, 140, 140) },
-    { QPalette::ToolTipBase, QColor(53, 53, 53) },
-    { QPalette::ToolTipText, QColor(240, 240, 240) }
+    { QPalette::Window, QColor(18, 19, 25) },
+    { QPalette::WindowText, QColor(242, 244, 248) },
+    { QPalette::Base, QColor(22, 24, 32) },
+    { QPalette::AlternateBase, QColor(26, 28, 38) },
+    { QPalette::Text, QColor(230, 233, 242) },
+    { QPalette::Button, QColor(28, 31, 42) },
+    { QPalette::ButtonText, QColor(242, 244, 248) },
+    { QPalette::BrightText, QColor(255, 95, 120) },
+    { QPalette::PlaceholderText, QColor(130, 134, 150) },
+    { QPalette::ToolTipBase, QColor(24, 26, 36) },
+    { QPalette::ToolTipText, QColor(242, 244, 248) },
+    { QPalette::Highlight, QColor(67, 100, 247) },
+    { QPalette::HighlightedText, QColor(255, 255, 255) }
   };
 
   return dark_colors;
@@ -107,10 +109,10 @@ void Appearance::LoadCustomPaletteColors() {
 
   Settings s;
   s.beginGroup(AppearanceSettings::kSettingsGroup);
-  const bool use_custom_color_set = s.value(AppearanceSettings::kUseCustomColorSet).toBool();
+  const bool use_custom_color_set = s.value(AppearanceSettings::kUseCustomColorSet, true).toBool();
 
   if (use_custom_color_set) {
-    QMap<QPalette::ColorRole, QColor> colors;
+    QMap<QPalette::ColorRole, QColor> colors = DarkColors();
     for (const ColorRole &color_role : ColorRoles()) {
       const QVariant value = s.value(color_role.settings_key);
       if (value.isValid()) {
