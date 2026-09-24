@@ -150,3 +150,76 @@ QImage ImageUtils::GenerateNoCoverImage(const QSize size, const qreal device_pix
   return image_square;
 
 }
+
+QColor ImageUtils::ExtractDominantColor(const QImage &image, const QColor &fallback) {
+
+  if (image.isNull()) return fallback;
+
+  // Scale down to a tiny 24x24 thumbnail for lightning-fast scanning (576 pixels)
+  QImage thumb = image.scaled(24, 24, Qt::IgnoreAspectRatio, Qt::FastTransformation);
+  if (thumb.format() != QImage::Format_ARGB32 && thumb.format() != QImage::Format_RGB32) {
+    thumb = thumb.convertToFormat(QImage::Format_ARGB32);
+  }
+
+  quint64 best_score = 0;
+  QColor best_color = fallback;
+
+  struct ColorBucket {
+    quint64 r_sum = 0;
+    quint64 g_sum = 0;
+    quint64 b_sum = 0;
+    quint32 count = 0;
+    quint32 avg_sat = 0;
+    quint32 avg_light = 0;
+  };
+
+  ColorBucket buckets[12];
+
+  const int width = thumb.width();
+  const int height = thumb.height();
+
+  for (int y = 0; y < height; ++y) {
+    const QRgb *scanline = reinterpret_cast<const QRgb*>(thumb.constScanLine(y));
+    for (int x = 0; x < width; ++x) {
+      const QRgb pixel = scanline[x];
+      const int r = qRed(pixel);
+      const int g = qGreen(pixel);
+      const int b = qBlue(pixel);
+
+      QColor col(r, g, b);
+      int h, s, l;
+      col.getHsl(&h, &s, &l);
+
+      // Skip extreme darkness, extreme brightness, and desaturated grey
+      if (l < 25 || l > 230 || s < 35 || h < 0) {
+        continue;
+      }
+
+      int bucket_idx = (h % 360) / 30;
+      buckets[bucket_idx].r_sum += r;
+      buckets[bucket_idx].g_sum += g;
+      buckets[bucket_idx].b_sum += b;
+      buckets[bucket_idx].count++;
+      buckets[bucket_idx].avg_sat += s;
+      buckets[bucket_idx].avg_light += l;
+    }
+  }
+
+  for (int i = 0; i < 12; ++i) {
+    if (buckets[i].count > 0) {
+      quint32 sat = buckets[i].avg_sat / buckets[i].count;
+      quint64 score = static_cast<quint64>(buckets[i].count) * sat;
+      if (score > best_score) {
+        best_score = score;
+        int r = static_cast<int>(buckets[i].r_sum / buckets[i].count);
+        int g = static_cast<int>(buckets[i].g_sum / buckets[i].count);
+        int b = static_cast<int>(buckets[i].b_sum / buckets[i].count);
+        best_color = QColor(r, g, b);
+      }
+    }
+  }
+
+  return best_color;
+
+}
+

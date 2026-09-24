@@ -37,6 +37,7 @@ class ImageUtils {
   static QByteArray FileToJpegData(const QString &filename);
   static QImage ScaleImage(const QImage &image, const QSize desired_size, const qreal device_pixel_ratio = 1.0F, const bool pad = true);
   static QImage GenerateNoCoverImage(const QSize size, const qreal device_pixel_ratio);
+  static QColor ExtractDominantColor(const QImage &image, const QColor &fallback = QColor(70, 130, 220));
 };
 
 #endif  // IMAGEUTILS_H

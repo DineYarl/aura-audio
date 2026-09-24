@@ -110,6 +110,7 @@
 #include "utilities/envutils.h"
 #include "utilities/filemanagerutils.h"
 #include "utilities/screenutils.h"
+#include "utilities/imageutils.h"
 #include "engine/enginebase.h"
 #include "dialogs/errordialog.h"
 #include "dialogs/aboutdialog.h"
@@ -1533,6 +1534,7 @@ void MainWindow::MediaStopped() {
     track_slider_timer_->stop();
   }
   ui_->track_slider->SetStopped();
+  ui_->player_controls->setStyleSheet(u""_s);
   systemtrayicon_->SetProgress(0);
   systemtrayicon_->SetStopped();
 
@@ -3396,8 +3398,24 @@ void MainWindow::AlbumCoverLoaded(const Song &song, const AlbumCoverLoaderResult
 
   song_ = song;
   album_cover_ = result.album_cover;
-
   Q_EMIT AlbumCoverReady(song, result.album_cover.image);
+
+  if (!result.album_cover.image.isNull()) {
+    QColor dominant = ImageUtils::ExtractDominantColor(result.album_cover.image);
+    QString ambientStyle = QStringLiteral(
+      "QFrame#player_controls {"
+      "  background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 rgba(%1, %2, %3, 0.42), stop:0.55 rgba(25, 28, 36, 0.82), stop:1 rgba(%1, %2, %3, 0.22));"
+      "  border: 1px solid rgba(%1, %2, %3, 0.45);"
+      "  border-radius: 14px;"
+      "  padding: 4px 12px;"
+      "  margin-bottom: 4px;"
+      "}"
+    ).arg(dominant.red()).arg(dominant.green()).arg(dominant.blue());
+    ui_->player_controls->setStyleSheet(ambientStyle);
+  }
+  else {
+    ui_->player_controls->setStyleSheet(u""_s);
+  }
 
   const bool enable_change_art = song.is_local_collection_song() && !song.effective_albumartist().isEmpty() && !song.album().isEmpty();
   album_cover_choice_controller_->show_cover_action()->setEnabled(result.success && result.type != AlbumCoverLoaderResult::Type::Unset);
