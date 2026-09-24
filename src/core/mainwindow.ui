@@ -270,6 +270,16 @@
                  </spacer>
                 </item>
                 <item>
+                 <widget class="QLabel" name="audio_quality_badge">
+                  <property name="text">
+                   <string/>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignCenter</set>
+                  </property>
+                 </widget>
+                </item>
+                <item>
                  <widget class="Line" name="line_volume">
                   <property name="orientation">
                    <enum>Qt::Vertical</enum>

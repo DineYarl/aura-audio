@@ -1049,6 +1049,8 @@ MainWindow::MainWindow(Application *app,
   ui_->action_open_cd->setVisible(false);
 #endif
 
+  ui_->audio_quality_badge->hide();
+
   // Load settings
   qLog(Debug) << "Loading settings";
   Settings settings;
@@ -1535,6 +1537,7 @@ void MainWindow::MediaStopped() {
   }
   ui_->track_slider->SetStopped();
   ui_->player_controls->setStyleSheet(u""_s);
+  ui_->audio_quality_badge->hide();
   systemtrayicon_->SetProgress(0);
   systemtrayicon_->SetStopped();
 
@@ -1639,6 +1642,50 @@ void MainWindow::SongChanged(const Song &song) {
 #endif
 
   SendNowPlaying();
+
+  // Update audiophile hi-res quality badge
+  if (song.is_valid()) {
+    QString badge_text;
+    QString quality_prop = u"lossy"_s;
+    const int sr = song.samplerate();
+    const int bits = song.bitdepth();
+    const QString ftype = Song::TextForFiletype(song.filetype()).toUpper();
+
+    if (ftype.contains(u"DSD"_s) || ftype.contains(u"DSF"_s) || ftype.contains(u"DFF"_s)) {
+      badge_text = QStringLiteral("✨ DSD DIRECT • %1").arg(sr > 0 ? QStringLiteral("%1 kHz").arg(sr / 1000.0, 0, 'f', 1) : u"1-bit"_s);
+      quality_prop = u"hires"_s;
+    }
+    else if (bits >= 24 || sr >= 88200) {
+      badge_text = QStringLiteral("✨ HI-RES • %1-BIT / %2 kHz %3")
+                      .arg(bits > 0 ? QString::number(bits) : u"24"_s)
+                      .arg(sr > 0 ? QString::number(sr / 1000.0, 'f', 1) : u"96"_s)
+                      .arg(!ftype.isEmpty() ? ftype : u"FLAC"_s);
+      quality_prop = u"hires"_s;
+    }
+    else if (bits == 16 || ftype == u"FLAC"_s || ftype == u"ALAC"_s || ftype == u"WAV"_s || ftype == u"AIFF"_s) {
+      badge_text = QStringLiteral("LOSSLESS • 16-BIT / %1 kHz %2")
+                      .arg(sr > 0 ? QString::number(sr / 1000.0, 'f', 1) : u"44.1"_s)
+                      .arg(!ftype.isEmpty() ? ftype : u"FLAC"_s);
+      quality_prop = u"lossless"_s;
+    }
+    else if (song.bitrate() > 0) {
+      badge_text = QStringLiteral("%1 • %2 kbps").arg(!ftype.isEmpty() ? ftype : u"AUDIO"_s).arg(song.bitrate());
+    }
+
+    if (!badge_text.isEmpty()) {
+      ui_->audio_quality_badge->setText(badge_text);
+      ui_->audio_quality_badge->setProperty("quality", quality_prop);
+      ui_->audio_quality_badge->style()->unpolish(ui_->audio_quality_badge);
+      ui_->audio_quality_badge->style()->polish(ui_->audio_quality_badge);
+      ui_->audio_quality_badge->show();
+    }
+    else {
+      ui_->audio_quality_badge->hide();
+    }
+  }
+  else {
+    ui_->audio_quality_badge->hide();
+  }
 
   const bool enable_change_art = song.is_local_collection_song() && !song.effective_albumartist().isEmpty() && !song.album().isEmpty();
   album_cover_choice_controller_->show_cover_action()->setEnabled(song.has_valid_art() && !song.art_unset());

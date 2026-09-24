@@ -292,3 +292,58 @@ QLabel#playlist_summary {
   font-size: 11px;
   padding-right: 8px;
 }
+
+/* --- Audiophile Hi-Res Quality Badge --- */
+QLabel#audio_quality_badge {
+  background-color: rgba(255, 255, 255, 0.08);
+  color: %palette-text;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  padding: 4px 10px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  margin: 0px 6px;
+}
+
+QLabel#audio_quality_badge[quality="lossless"] {
+  background-color: rgba(60, 150, 255, 0.18);
+  color: #72c0ff;
+  border: 1px solid rgba(60, 150, 255, 0.45);
+}
+
+QLabel#audio_quality_badge[quality="hires"] {
+  background-color: rgba(255, 185, 0, 0.20);
+  color: #ffc425;
+  border: 1px solid rgba(255, 185, 0, 0.55);
+}
+
+/* --- Collection View & Library Browser --- */
+CollectionView, QTreeView#view {
+  background-color: %palette-base;
+  border: none;
+  font-size: 13px;
+  show-decoration-selected: 1;
+}
+
+CollectionView::item, QTreeView#view::item {
+  padding: 6px 6px;
+  border-radius: 6px;
+  margin: 1px 4px;
+}
+
+CollectionView::item:hover, QTreeView#view::item:hover {
+  background-color: rgba(255, 255, 255, 0.06);
+}
+
+CollectionView::item:selected, QTreeView#view::item:selected {
+  background-color: %palette-highlight;
+  color: %palette-highlightedtext;
+}
+
+CollectionFilterWidget {
+  background-color: transparent;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 4px;
+}
+
