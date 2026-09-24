@@ -24,7 +24,16 @@ fi
 echo "[+] Compiling Aura Audio..."
 cmake --build build -j$(nproc)
 
+if [ -f "$SCRIPT_DIR/build/strawberry" ]; then
+    BIN_PATH="$SCRIPT_DIR/build/strawberry"
+elif [ -f "$SCRIPT_DIR/build/src/strawberry" ]; then
+    BIN_PATH="$SCRIPT_DIR/build/src/strawberry"
+else
+    echo "[-] Error: Executable not found in build directory!"
+    exit 1
+fi
+
 echo "[+] Compilation successful! Launching Aura Audio..."
-./build/src/strawberry "$@" &
+"$BIN_PATH" "$@" &
 disown
 echo "[+] Aura Audio Player is now running."
