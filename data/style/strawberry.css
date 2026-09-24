@@ -347,3 +347,18 @@ CollectionFilterWidget {
   padding: 4px;
 }
 
+/* --- Minimalist Synchronized & Clean Lyrics View --- */
+ResizableTextEdit,
+QTextEdit#textedit_play_lyrics {
+  background-color: transparent;
+  border: none;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.8;
+  color: %palette-text;
+  padding: 16px 24px;
+  selection-background-color: %palette-highlight;
+  selection-color: %palette-highlightedtext;
+}
+
+
