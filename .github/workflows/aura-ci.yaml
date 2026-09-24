@@ -1,0 +1,91 @@
+name: Aura Audio CI / CD
+
+on:
+  push:
+    branches: [ master, main, modern-glass-ui ]
+    tags: [ 'v*' ]
+  pull_request:
+    branches: [ master, main ]
+  workflow_dispatch:
+
+jobs:
+  build-linux-ubuntu:
+    name: Build Linux (Ubuntu 24.04 / 26.04)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install System Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            git cmake ninja-build gcc g++ \
+            qt6-base-dev qt6-base-dev-tools qt6-tools-dev qt6-tools-dev-tools \
+            libglib2.0-dev libdbus-1-dev libboost-dev libsqlite3-dev libgnutls28-dev \
+            libicu-dev libasound2-dev libpulse-dev libgstreamer1.0-dev \
+            libgstreamer-plugins-base1.0-dev libtag1-dev libchromaprint-dev \
+            libfftw3-dev libebur128-dev libcdio-dev libmtp-dev
+
+      - name: Configure CMake
+        run: |
+          cmake -B build -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DBUILD_WITH_QT6=ON
+
+      - name: Build
+        run: |
+          cmake --build build -j$(nproc)
+
+      - name: Package Binary Artifact
+        run: |
+          mkdir -p package/bin package/share
+          cp build/src/strawberry package/bin/aura-audio
+          tar -czf aura-audio-linux-x86_64.tar.gz -C package .
+
+      - name: Upload Linux Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: aura-audio-linux-x86_64
+          path: aura-audio-linux-x86_64.tar.gz
+
+  build-windows:
+    name: Build Windows (MSVC)
+    runs-on: windows-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Setup Qt
+        uses: jurplel/install-qt-action@v3
+        with:
+          version: '6.7.*'
+          host: 'windows'
+          target: 'desktop'
+          arch: 'win64_msvc2019_64'
+
+      - name: Setup Ninja
+        uses: seanmiddleditch/gha-setup-ninja@master
+
+      - name: Configure CMake
+        shell: cmd
+        run: |
+          call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+          cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DBUILD_WITH_QT6=ON
+
+      - name: Build
+        shell: cmd
+        run: |
+          call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+          cmake --build build
+
+      - name: Upload Windows Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: aura-audio-windows-x64
+          path: build/src/strawberry.exe
+          if-no-files-found: warn
